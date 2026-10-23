@@ -54,7 +54,7 @@ public final class Point3D implements Point, Geometry3D
     }
     
     /**
-     * Computes the squared Euclidean distance between two points. AS it does
+     * Computes the squared Euclidean distance between two points. As it does
      * not involve square root computation, the squared distance may be faster
      * to compute than the classical Euclidean distance.
      * 

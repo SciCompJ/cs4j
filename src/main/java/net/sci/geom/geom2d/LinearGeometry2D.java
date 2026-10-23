@@ -94,8 +94,9 @@ public interface LinearGeometry2D extends Curve2D
     }
 
     /**
-     * Returns the unique intersection with a linear shape. If the intersection
-     * doesn't exist (parallel lines, short edges), return null.
+     * Returns the intersection point, if it exists, of the two linear shapes.
+     * If the intersection doesn't exist (parallel lines, short edges), returns
+     * null.
      */
     public static Point2D intersection(LinearGeometry2D line1, LinearGeometry2D line2) 
     {
@@ -103,19 +104,15 @@ public interface LinearGeometry2D extends Curve2D
         Vector2D v2 = line2.direction();
    
         // return null in case of parallel lines
-        if (Vector2D.isParallel(v1, v2))
-        {
-            return null;
-        }
+        if (Vector2D.isParallel(v1, v2)) return null;
         
-        // extract direction vector components
+        // retrieve direction vector components
         double dx1 = v1.x();
         double dy1 = v1.y();
-
         double dx2 = v2.x();
         double dy2 = v2.y();
 
-
+        // retrieve coordinates of origin points
         Point2D origin1 = line1.origin();
         double x1 = origin1.x();
         double y1 = origin1.y();
@@ -123,23 +120,15 @@ public interface LinearGeometry2D extends Curve2D
         double x2 = origin2.x();
         double y2 = origin2.y();
         
-        // compute position on the lines
+        // check that the intersection point belongs to parameterization ranges
         double denom = dx1 * dy2 - dy1 * dx2;
         double t1 = ((y1 - y2) * dx2 - (x1 - x2) * dy2) / denom;
-        if (t1 < line1.t0() || t1 > line1.t1())
-        {
-            return null;
-        }
+        if (t1 < line1.t0() || t1 > line1.t1()) return null;
         double t2 = ((y1 - y2) * dx1 - (x1 - x2) * dy1) / denom;
-        if (t2 < line2.t0() || t2 > line2.t1())
-        {
-            return null;
-        }
+        if (t2 < line2.t0() || t2 > line2.t1()) return null;
 
         // compute position of intersection point
-        Point2D point = new Point2D(x1 + t1 * dx1, y1 + t1 * dy1);
-
-        return point;
+        return new Point2D(x1 + t1 * dx1, y1 + t1 * dy1);
     }
 
     
@@ -148,13 +137,13 @@ public interface LinearGeometry2D extends Curve2D
 
     /**
      * Returns the unique intersection with a linear shape. If the intersection
-     * doesn't exist (parallel lines, short edges), return null.
+     * doesn't exist (parallel lines, short edges), returns null.
      * 
      * @param line
      *            the linear geometry to intersect with
      * @return the intersection point if it exists, or null.
      */
-    public default Point2D intersection(LinearGeometry2D line) 
+    public default Point2D intersection(LinearGeometry2D line)
     {
         return LinearGeometry2D.intersection(this, line);
     }
@@ -189,7 +178,7 @@ public interface LinearGeometry2D extends Curve2D
     
     /**
      * Returns true if the orthogonal projection of the specified point is
-     * contains within this linear geometry.
+     * contained within this linear geometry.
      * 
      * @param point
      *            the point to project

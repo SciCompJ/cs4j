@@ -46,7 +46,7 @@ public class Meshes3D
     }
     
     /**
-     * Creates a basic tetrahedron whose vertices correspond to four corners of
+     * Creates a regular tetrahedron whose vertices correspond to four corners of
      * the unit cube, including the origin.
      * 
      * @return a Mesh instance representing a tetrahedron
@@ -66,7 +66,7 @@ public class Meshes3D
     }
 
     /**
-     * Creates a basic Octahedron, with eight faces, and six vertices located at
+     * Creates a regular Octahedron, with eight faces, and six vertices located at
      * extremity of one of the unit vectors (in each direction).
      * 
      * @return a Mesh instance representing an octahedron

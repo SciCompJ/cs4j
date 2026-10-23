@@ -35,6 +35,12 @@ public interface Polygonal2D
 
     public Iterable<? extends Vertex> vertices();
 
+    /**
+     * Adds a vertex to the geometry (optional operation).
+     * 
+     * @param vertexPosition
+     *            the position of the vertex to add.
+     */
     public void addVertex(Point2D vertexPosition);
     
     public void removeVertex(int vertexIndex);

@@ -38,9 +38,9 @@ import net.sci.geom.mesh3d.process.QuickHull3D.Mesh.Vertex;
  * <ul>
  * <li>use the core classes ofthe "net.sci.geom" package</li>
  * <li>re-organize the computation code</li>
- * <li>returns the result as an instance of the {@code Mesh} class, 
+ * <li>return the result as an instance of the {@code Mesh} class, 
  * that implements the {@code net.sci.geom.mesh3d.Mesh3D} interface</li>
- * <li>generlize the usage of the {@code Collection} API</li>
+ * <li>generalize the usage of the {@code Collection} API</li>
  * <li>make management of computation tolerance more generic</li>
  * </ul>
  * 

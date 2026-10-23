@@ -7,6 +7,8 @@ import net.sci.geom.UnboundedGeometryException;
 import net.sci.geom.geom2d.Point2D;
 
 /**
+ * A plane in the 3D Euclidean space.
+ * 
  * @author dlegland
  *
  */
@@ -119,23 +121,41 @@ public class Plane3D implements Geometry3D
     // ===================================================================
     // Accessors
     
+    /**
+     * Returns the position of the point used as origin for this plane.
+     * 
+     * @return the position of the point used as origin for this plane.
+     */
     public Point3D origin()
     {
         return new Point3D(this.x0, this.y0, this.z0);
     }
     
+    /**
+     * Returns the first direction vector of this plane.
+     * 
+     * @return the first direction vector of this plane
+     */
     public Vector3D directionVector1()
     {
         return new Vector3D(dx1, dy1, dz1);
     }
     
+    /**
+     * Returns the second direction vector of this plane.
+     * 
+     * @return the second direction vector of this plane
+     */
     public Vector3D directionVector2()
     {
         return new Vector3D(dx2, dy2, dz2);
     }
     
     /**
-     * @return the normal to the plane, computed as the cross product of the two direction vectors
+     * Computes the normal to the plane, as the cross product of the two
+     * direction vectors
+     * 
+     * @return the normal vector to the plane
      */
     public Vector3D normal()
     {

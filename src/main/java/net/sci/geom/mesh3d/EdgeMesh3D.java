@@ -11,8 +11,7 @@ import java.util.Collection;
 public interface EdgeMesh3D extends Mesh3D
 {
     /**
-     * Returns the collection of edges adjacent to a given vertex (optional
-     * operation).
+     * Returns the collection of edges adjacent to a given vertex.
      * 
      * @param vertex
      *            the vertex
@@ -52,12 +51,12 @@ public interface EdgeMesh3D extends Mesh3D
     // Management of edges
     
     /**
-     * @return the number of edges in this mesh (optional operation).
+     * @return the number of edges in this mesh.
      */
     public int edgeCount();
 
     /**
-     * Returns the collection of edges within this mesh (optional operation).
+     * Returns the collection of edges within this mesh.
      * 
      * @return the collection of edges within this mesh.
      */
