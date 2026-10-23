@@ -272,7 +272,7 @@ public final class Point2D implements PointShape2D, Point
      *            the scaling factor
      * @return the point with new coordinates
      */
-    public Point2D divideBy(double k)
+    public Point2D dividedBy(double k)
     {
         return new Point2D(this.x / k, this.y / k);
     }

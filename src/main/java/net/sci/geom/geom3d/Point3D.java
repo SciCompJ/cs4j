@@ -312,7 +312,7 @@ public final class Point3D implements Point, Geometry3D
      *            the scaling factor
      * @return the point with new coordinates
      */
-    public Point3D divideBy(double k)
+    public Point3D dividedBy(double k)
     {
         return new Point3D(this.x / k, this.y / k, this.z / k);
     }

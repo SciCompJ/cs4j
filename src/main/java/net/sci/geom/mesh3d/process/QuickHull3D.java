@@ -1904,7 +1904,7 @@ public class QuickHull3D
                     nv++;
                 } while (edge != edge0);
                 
-                return centroid.divideBy(nv);
+                return centroid.dividedBy(nv);
             }
             
             private void computeNormal()
