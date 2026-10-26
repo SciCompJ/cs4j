@@ -26,15 +26,22 @@ public class Meshes3D
      */
     public static final Mesh3D fromBounds(Bounds3D bounds)
     {
+        // retrieve min/max coords
+        double xmin = bounds.xMin();
+        double xmax = bounds.xMax();
+        double ymin = bounds.yMin();
+        double ymax = bounds.yMax();
+        double zmin = bounds.zMin();
+        double zmax = bounds.zMax();
         SimplePolygonalMesh3D mesh = new SimplePolygonalMesh3D(8, 6);
-        Mesh3D.Vertex v000 = mesh.addVertex(new Point3D(bounds.xMin(), bounds.yMin(), bounds.zMin()));
-        Mesh3D.Vertex v001 = mesh.addVertex(new Point3D(bounds.xMax(), bounds.yMin(), bounds.zMin()));
-        Mesh3D.Vertex v010 = mesh.addVertex(new Point3D(bounds.xMin(), bounds.yMax(), bounds.zMin()));
-        Mesh3D.Vertex v011 = mesh.addVertex(new Point3D(bounds.xMax(), bounds.yMax(), bounds.zMin()));
-        Mesh3D.Vertex v100 = mesh.addVertex(new Point3D(bounds.xMin(), bounds.yMin(), bounds.zMax()));
-        Mesh3D.Vertex v101 = mesh.addVertex(new Point3D(bounds.xMax(), bounds.yMin(), bounds.zMax()));
-        Mesh3D.Vertex v110 = mesh.addVertex(new Point3D(bounds.xMin(), bounds.yMax(), bounds.zMax()));
-        Mesh3D.Vertex v111 = mesh.addVertex(new Point3D(bounds.xMax(), bounds.yMax(), bounds.zMax()));
+        Mesh3D.Vertex v000 = mesh.addVertex(new Point3D(xmin, ymin, zmin));
+        Mesh3D.Vertex v001 = mesh.addVertex(new Point3D(xmax, ymin, zmin));
+        Mesh3D.Vertex v010 = mesh.addVertex(new Point3D(xmin, ymax, zmin));
+        Mesh3D.Vertex v011 = mesh.addVertex(new Point3D(xmax, ymax, zmin));
+        Mesh3D.Vertex v100 = mesh.addVertex(new Point3D(xmin, ymin, zmax));
+        Mesh3D.Vertex v101 = mesh.addVertex(new Point3D(xmax, ymin, zmax));
+        Mesh3D.Vertex v110 = mesh.addVertex(new Point3D(xmin, ymax, zmax));
+        Mesh3D.Vertex v111 = mesh.addVertex(new Point3D(xmax, ymax, zmax));
         
         mesh.addFace(new Mesh3D.Vertex[] {v000, v010, v011, v001});
         mesh.addFace(new Mesh3D.Vertex[] {v100, v101, v111, v110});
@@ -99,8 +106,7 @@ public class Meshes3D
         
         for (Mesh3D.Vertex v : mesh.vertices())
         {
-            Mesh3D.Vertex v2 = trimesh.addVertex(v.position());
-            vertexMap.put(v, v2);
+            vertexMap.put(v, trimesh.addVertex(v.position()));
         }
         
         for (Mesh3D.Face face : mesh.faces())

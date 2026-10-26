@@ -68,10 +68,8 @@ public class SimpleTriMesh3DTest
         SimpleTriMesh3D mesh = createOctahedron();
         
         int count = 0;
-        Iterator<Face> iterator = mesh.faces().iterator();
-        while(iterator.hasNext())
+        for (@SuppressWarnings("unused") Face face : mesh.faces())
         {
-            iterator.next();
             count++;
         }
         

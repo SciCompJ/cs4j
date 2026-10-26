@@ -213,10 +213,13 @@ public class DefaultTriMesh3D implements TriMesh3D, EdgeMesh3D
     }
 
     @Override
-    public Collection<Mesh3D.Face> vertexFaces(Mesh3D.Vertex vertex)
+    public Collection<TriMesh3D.Face> vertexFaces(Mesh3D.Vertex vertex)
     {
+        // pre-allocate result array
         int index = getVertex(vertex).index;
-        ArrayList<Mesh3D.Face> vertexFaces = new ArrayList<Mesh3D.Face>(6);
+        ArrayList<TriMesh3D.Face> vertexFaces = new ArrayList<TriMesh3D.Face>(6);
+        
+        // iterate on face indices to avoid creating face instances
         for (int iFace = 0; iFace < faces.size(); iFace++)
         {
             int[] inds = faces.get(iFace);
@@ -630,11 +633,11 @@ public class DefaultTriMesh3D implements TriMesh3D, EdgeMesh3D
     // Management of faces
     
     @Override
-    public Iterable<Mesh3D.Face> faces()
+    public Iterable<TriMesh3D.Face> faces()
     {
-        return new Iterable<Mesh3D.Face>() {
+        return new Iterable<TriMesh3D.Face>() {
             @Override
-            public Iterator<Mesh3D.Face> iterator()
+            public Iterator<TriMesh3D.Face> iterator()
             {
                 return new FaceIterator();
             }
@@ -979,7 +982,7 @@ public class DefaultTriMesh3D implements TriMesh3D, EdgeMesh3D
     }
 
     
-    private class FaceIterator implements Iterator<Mesh3D.Face>
+    private class FaceIterator implements Iterator<TriMesh3D.Face>
     {
         int index = 0;
         @Override
@@ -989,7 +992,7 @@ public class DefaultTriMesh3D implements TriMesh3D, EdgeMesh3D
         }
         
         @Override
-        public Mesh3D.Face next()
+        public TriMesh3D.Face next()
         {
             return new Face(index++);
         }

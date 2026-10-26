@@ -3,6 +3,8 @@
  */
 package net.sci.geom.mesh3d;
 
+import java.util.Collection;
+
 /**
  * A 3D polygon mesh that contains only triangle faces.
  * 
@@ -13,6 +15,9 @@ package net.sci.geom.mesh3d;
  */
 public interface TriMesh3D extends Mesh3D
 {
+    // =============================================================
+    // New methods
+
     /**
      * Adds a triangular face defined by references to its three vertices.
      * 
@@ -26,6 +31,24 @@ public interface TriMesh3D extends Mesh3D
      */
     public Mesh3D.Face addFace(Mesh3D.Vertex v1, Mesh3D.Vertex v2, Mesh3D.Vertex v3);
     
+    
+    // =============================================================
+    // Specialization of the Mesh3D interface
+
+    @Override
+    public Collection<? extends Face> vertexFaces(Vertex vertex);
+
+    @Override
+    public Iterable<? extends Face> faces();
+    
+    
+    // =============================================================
+    // New inner interfaces
+
+    /**
+     * Specialization of the {@code Mesh3D.Face} interface, that assumes the
+     * face to contain only three vertices.
+     */
     public interface Face extends Mesh3D.Face
     {
         @Override
