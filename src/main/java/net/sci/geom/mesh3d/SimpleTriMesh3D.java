@@ -4,6 +4,7 @@
 package net.sci.geom.mesh3d;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -71,6 +72,36 @@ public class SimpleTriMesh3D implements TriMesh3D
     {
         this.vertexPositions = new ArrayList<Point3D>(nv);
         this.faces = new ArrayList<int[]>(nf);
+    }
+
+    /**
+     * Create a new mesh initialized with the array of vertex positions and face
+     * vertex indices.
+     * 
+     * @param vertices
+     *            the array of vertex positions
+     * @param faces
+     *            the array of face vertex indices
+     */
+    public SimpleTriMesh3D(Point3D[] vertices, int[][] faces)
+    {
+        this.vertexPositions = new ArrayList<>(Arrays.asList(vertices));
+        this.faces = new ArrayList<>(Arrays.asList(faces));
+    }
+
+    /**
+     * Create a new mesh by using directly the array of vertex positions and
+     * face vertex indices.
+     * 
+     * @param vertices
+     *            the array of vertex positions
+     * @param faces
+     *            the array of face vertex indices
+     */
+    public SimpleTriMesh3D(ArrayList<Point3D> vertices, ArrayList<int[]> faces)
+    {
+        this.vertexPositions = vertices;
+        this.faces = faces;
     }
 
     
@@ -363,13 +394,32 @@ public class SimpleTriMesh3D implements TriMesh3D
         return new Triangle3D(p1, p2, p3);
     }
 
-    public Face getFace(int index)
+    /**
+     * Returns the face corresponding to the given index.
+     * 
+     * @param faceIndex
+     *            the face index
+     * @return the face at the specified index
+     */
+    public Face getFace(int faceIndex)
     {
-        return new Face(index);
+        return new Face(faceIndex);
     }
 
     /**
-	 * Returns the index of the specified vertex.
+     * Returns the vertex indices for the face corresponding to the given index.
+     * 
+     * @param faceIndex
+     *            the face index
+     * @return the array of vertex indices for the face
+     */
+    public int[] getFaceVertexIndices(int faceIndex)
+    {
+        return faces.get(faceIndex);
+    }
+
+    /**
+	 * Returns the index of the specified face.
 	 * 
 	 * @param face
 	 *            a face belonging to this mesh.
