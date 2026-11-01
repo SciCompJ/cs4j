@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
 
+import net.sci.algo.AlgoStub;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.mesh3d.Mesh3D;
 import net.sci.geom.mesh3d.SimplePolygonalMesh3D;
@@ -22,7 +23,7 @@ import net.sci.geom.mesh3d.SimpleTriMesh3D;
  * @author dlegland
  *
  */
-public class OffMeshReader implements MeshReader
+public class OffMeshReader extends AlgoStub implements MeshReader
 {
     File file;
     
@@ -56,9 +57,11 @@ public class OffMeshReader implements MeshReader
         scanner.close();
         
         // read vertices
+        this.fireStatusChanged(this, "read vertices");
         ArrayList<Point3D> vertices = new ArrayList<Point3D>(nVertices); 
         for (int iVertex = 0; iVertex < nVertices; iVertex++)
         {
+            this.fireProgressChanged(this, iVertex, nVertices);
             Scanner s = new Scanner(readNextNonCommentLine(reader));
             s.useLocale(Locale.ENGLISH);
             double vx = s.nextDouble();
@@ -69,10 +72,12 @@ public class OffMeshReader implements MeshReader
         }
         
         // read faces
+        this.fireStatusChanged(this, "read faces");
         boolean triMesh = true;
         ArrayList<int[]> faces = new ArrayList<int[]>(nFaces); 
         for (int iFace = 0; iFace < nFaces; iFace++)
         {
+            this.fireProgressChanged(this, iFace, nFaces);
             Scanner s = new Scanner(readNextNonCommentLine(reader));
             int nvf = s.nextInt();
             if (nvf != 3) triMesh = false;
@@ -88,6 +93,7 @@ public class OffMeshReader implements MeshReader
         reader.close();
 
         // create mesh, choosing best type depending on number of vertices per face
+        this.fireStatusChanged(this, "create mesh");
         if (triMesh)
         {
             SimpleTriMesh3D mesh = new SimpleTriMesh3D(nVertices, nFaces);
@@ -103,9 +109,11 @@ public class OffMeshReader implements MeshReader
     
     private String readNextNonCommentLine(LineNumberReader reader) throws IOException
     {
-        String line;
-        while((line = reader.readLine()) != null)
+        while(true)
         {
+            String line = reader.readLine();
+            if (line == null) return null;
+            
             line = line.trim();
             if (line.startsWith("#"))
             {
@@ -113,6 +121,5 @@ public class OffMeshReader implements MeshReader
             }
             return line;
         }
-        return null;
     }
 }
