@@ -20,8 +20,8 @@ import net.sci.geom.mesh3d.SimpleTriMesh3D;
 /**
  * Read a 3D mesh from a text file using the OFF format.
  * 
- * @author dlegland
- *
+ * 
+ * @see OffMeshWriter
  */
 public class OffMeshReader extends AlgoStub implements MeshReader
 {

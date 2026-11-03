@@ -13,21 +13,23 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import net.sci.algo.AlgoStub;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.mesh3d.Mesh3D;
 import net.sci.geom.mesh3d.Mesh3D.Face;
 import net.sci.geom.mesh3d.Mesh3D.Vertex;
 
 /**
- * @author dlegland
- *
+ * Writes a 3D mesh into a text file using the OFF format.
+ * 
+ * @see OffMeshReader
  */
-public class OffMeshWriter implements MeshWriter
+public class OffMeshWriter extends AlgoStub implements MeshWriter
 {
     File file = null;
     
     /**
-     * Public constructor.
+     * Public constructor using a file as output.
      */
     public OffMeshWriter(File file)
     {
@@ -64,6 +66,7 @@ public class OffMeshWriter implements MeshWriter
         int index = 0;
         for (Vertex vertex : mesh.vertices())
         {
+            this.fireProgressChanged(this, index, nv+nf);
             Point3D pos = vertex.position();
             writer.printf(Locale.ENGLISH, "%f %f %f\n", pos.x(), pos.y(), pos.z());
             
@@ -71,8 +74,10 @@ public class OffMeshWriter implements MeshWriter
         }
 
         // print vertex indices of each face
+        int iFace = 0;
         for (Face face : mesh.faces())
         {
+            this.fireProgressChanged(this, nv+(iFace++), nv+nf);
             Collection<? extends Vertex> vertices = mesh.faceVertices(face);
             writer.printf("%d", vertices.size());
             
@@ -86,5 +91,4 @@ public class OffMeshWriter implements MeshWriter
         // close writer
         writer.close();
     }
-    
 }
