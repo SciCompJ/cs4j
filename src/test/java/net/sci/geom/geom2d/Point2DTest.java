@@ -13,7 +13,7 @@ public class Point2DTest
      * Test for double getDistance(Point2D)
      */
     @Test
-    public void testDistancePoint2D() 
+    public void test_distance_Point2D() 
     {
         Point2D p1 = new Point2D(2, 3);
         Point2D p2 = new Point2D(1, 4);
@@ -29,7 +29,7 @@ public class Point2DTest
     }
 
     @Test
-    public void testPlusVector() 
+    public void test_plus_Vector2D() 
     {
         Point2D p1 = new Point2D(20, 30);
         Vector2D v = new Vector2D(40, 50);
@@ -41,7 +41,7 @@ public class Point2DTest
     }
     
     @Test
-    public void testMinusVector() 
+    public void test_minus_Vector2D() 
     {
         Point2D p1 = new Point2D(60, 80);
         Vector2D v = new Vector2D(40, 50);
@@ -53,7 +53,7 @@ public class Point2DTest
     }
     
     @Test
-    public void testCentroid() 
+    public void test_centroid_ellipsis() 
     {
         Point2D p1 = new Point2D(20, 20); 
         Point2D p2 = new Point2D(60, 30); 
@@ -66,7 +66,21 @@ public class Point2DTest
     }
     
     @Test
-    public void testSortPoints() 
+    public void test_centroid_iterable() 
+    {
+        ArrayList<Point2D> pts = new ArrayList<Point2D>();
+        pts.add(new Point2D(20, 20)); 
+        pts.add(new Point2D(60, 30)); 
+        pts.add(new Point2D(80, 80)); 
+        pts.add(new Point2D(40, 70));
+        Point2D centroid = Point2D.centroid(pts);
+        
+        assertEquals(50, centroid.x(), .01);
+        assertEquals(50, centroid.y(), .01);
+    }
+    
+    @Test
+    public void test_sortPoints() 
     {
         // create points
         Point2D p1 = new Point2D(60.12, 40.23); 

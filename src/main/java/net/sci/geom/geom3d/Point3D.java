@@ -95,6 +95,32 @@ public final class Point3D implements Point, Geometry3D
 
         return new Point3D(xc / np, yc / np, zc / np);
     }
+    
+    /**
+     * Computes the centroid of a collection of points given as an
+     * {@code Iterable}. The coordinates of the centroid are the average of the
+     * coordinates of the points.
+     * 
+     * @param points
+     *            an {@code Iterable} over a series of points
+     * @return the centroid of the points
+     */
+    public static final Point3D centroid(Iterable<Point3D> points)
+    {
+        double xc = 0;
+        double yc = 0;
+        double zc = 0;
+        int n = 0;
+        for (Point3D p : points)
+        {
+            xc += p.x;
+            yc += p.y;
+            zc += p.z;
+            n++;
+        }
+
+        return new Point3D(xc / n, yc / n, zc / n);
+    }
 
     /**
      * Converts a 2D point into a 3D point by adding a z-coordinate

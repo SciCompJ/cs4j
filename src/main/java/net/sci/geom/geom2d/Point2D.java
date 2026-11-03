@@ -56,6 +56,30 @@ public final class Point2D implements PointShape2D, Point
     }
     
     /**
+     * Computes the centroid of a collection of points given as an
+     * {@code Iterable}. The coordinates of the centroid are the average of the
+     * coordinates of the points.
+     * 
+     * @param points
+     *            an {@code Iterable} over a series of points
+     * @return the centroid of the points
+     */
+    public static final Point2D centroid(Iterable<Point2D> points)
+    {
+        double xc = 0;
+        double yc = 0;
+        int n = 0;
+        for (Point2D p : points)
+        {
+            xc += p.x;
+            yc += p.y;
+            n++;
+        }
+
+        return new Point2D(xc / n, yc / n);
+    }
+
+    /**
      * Computes the centroid of a collection of points identified by two
      * coordinate arrays with the same length.
      * 
