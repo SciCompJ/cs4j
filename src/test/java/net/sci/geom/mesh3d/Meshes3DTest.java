@@ -52,6 +52,25 @@ public class Meshes3DTest
     }
     
     /**
+     * Test method for {@link net.sci.geom.mesh3d.Meshes3D#createIcosahedron()}.
+     */
+    @Test
+    public final void test_createIcosahedron()
+    {
+        TriMesh3D mesh = Meshes3D.createIcosahedron();
+        assertEquals(12, mesh.vertexCount());
+        assertEquals(20, mesh.faceCount());
+        
+        Bounds3D bounds = mesh.bounds();
+        assertEquals(-0.85, bounds.minCoord(0), 0.01);
+        assertEquals(0.85, bounds.maxCoord(0), 0.01);
+        assertEquals(-0.81, bounds.minCoord(1), 0.01);
+        assertEquals(0.81, bounds.maxCoord(1), 0.01);
+        assertEquals(0.00, bounds.minCoord(2), 0.01);
+        assertEquals(1.90, bounds.maxCoord(2), 0.01);
+    }
+    
+    /**
      * Test method for {@link net.sci.geom.mesh3d.Meshes3D#triangulate(net.sci.geom.mesh3d.Mesh3D)}.
      */
     @Test
