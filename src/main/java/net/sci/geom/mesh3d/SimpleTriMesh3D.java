@@ -298,7 +298,7 @@ public class SimpleTriMesh3D implements TriMesh3D
     @Override
     public Collection<Point3D> vertexPositions()
     {
-        return vertexPositions();
+        return vertexPositions;
     }
 
     /**

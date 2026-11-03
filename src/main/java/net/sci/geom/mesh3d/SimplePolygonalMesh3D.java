@@ -298,7 +298,7 @@ public class SimplePolygonalMesh3D implements Mesh3D
     @Override
     public Collection<Point3D> vertexPositions()
     {
-        return vertexPositions();
+        return vertexPositions;
     }
 
     /**
