@@ -20,7 +20,7 @@ import net.sci.geom.geom3d.impl.DefaultPolygon3D;
 /**
  * Implementation of a polygonal 3D mesh where faces may have an arbitrary number of vertices.
  * 
- * Specificities of this implementation:
+ * Specific features of this implementation:
  * <ul>
  * <li>Faces are polygons.</li>
  * <li>Limited edition possibilities. Vertices and faces can be added, but not removed.</li>
@@ -97,30 +97,6 @@ public class SimplePolygonalMesh3D implements Mesh3D
     // ===================================================================
     // Methods specific to Mesh3D
     
-//    /**
-//     * Computes the surface area of the mesh.
-//     * 
-//     * @return the surface area of the mesh
-//     */
-//    public double surfaceArea()
-//    {
-//        double surf = 0;
-//        
-//        // Computes the sum of the norm of the cross products.
-//        for (int[] faceIndices : faces)
-//        {
-//            Point3D v1 = this.vertexPositions.get(faceIndices[0]);
-//            Point3D v2 = this.vertexPositions.get(faceIndices[1]);
-//            Point3D v3 = this.vertexPositions.get(faceIndices[2]);
-//            
-//            Vector3D v12 = new Vector3D(v1, v2);
-//            Vector3D v13 = new Vector3D(v1, v3);
-//            surf += Vector3D.crossProduct(v12,  v13).norm();
-//        }
-//
-//        return surf / 2;
-//    }
- 
     /**
      * Finds the index of the closest vertex to the input point.
      * 
@@ -340,17 +316,13 @@ public class SimplePolygonalMesh3D implements Mesh3D
     }
 
     /**
-     * Adds a triangular face defined by references to its three vertices.
+     * Adds a polygon face defined by references to its vertices.
      * 
-     * @param v1
-     *            reference to the first face vertex
-     * @param v2
-     *            reference to the second face vertex
-     * @param v3
-     *            reference to the third face vertex
+     * @param vertices
+     *            the list of vertices that compose this face
      * @return the index of the newly created face
      */
-    public Mesh3D.Face addFace(Mesh3D.Vertex[] vertices)
+    public Mesh3D.Face addFace(Mesh3D.Vertex... vertices)
     {
         int[] inds = new int[vertices.length];
         for (int i = 0; i < vertices.length; i++)
@@ -360,9 +332,9 @@ public class SimplePolygonalMesh3D implements Mesh3D
         int index = addFace(inds);
         return new Face(index);
     }
-
+    
     /**
-     * Adds a triangular face defined by the indices of its vertices.
+     * Adds a polygon face defined by the list of its vertex indices.
      * 
      * @param indices
      *            the array of vertex indices
@@ -398,21 +370,19 @@ public class SimplePolygonalMesh3D implements Mesh3D
     }
 
     /**
-	 * Returns the index of the specified vertex.
-	 * 
-	 * @param face
-	 *            a face belonging to this mesh.
-	 * @return the index of the face in the face array.
-	 * @throws RuntimeException if the face does not belong to the mesh.
-	 */
+     * Returns the index of the specified vertex.
+     * 
+     * @param face
+     *            a face belonging to this mesh.
+     * @return the index of the face in the face array.
+     * @throws RuntimeException
+     *             if the face does not belong to the mesh.
+     */
     public int indexOf(Mesh3D.Face face)
     {
-    	if (face instanceof Face)
-    	{
-    		return ((Face) face).index;		
-    	}
+        if (face instanceof Face face2) return face2.index;
 
-    	throw new IllegalArgumentException("Face should be an instance of inner Face implementation");
+        throw new IllegalArgumentException("Face must be an instance of inner Face implementation");
     }
 
     /**
@@ -424,11 +394,8 @@ public class SimplePolygonalMesh3D implements Mesh3D
      */
     private Face getFace(Mesh3D.Face face)
     {
-        if (!(face instanceof Face))
-        {
-            throw new IllegalArgumentException("Face should be an instance of inner Face implementation");
-        }
-        return (Face) face;
+        if (face instanceof Face face2) return face2;
+        throw new IllegalArgumentException("Face must be an instance of inner Face implementation");
     }
     
 
@@ -547,12 +514,11 @@ public class SimplePolygonalMesh3D implements Mesh3D
 		@Override
         public boolean equals(Object obj)
         {
-            if (!(obj instanceof Vertex))
+            if (obj instanceof Vertex vertex)
             {
-                return false;
+                return this.index == vertex.index;
             }
-            Vertex that = (Vertex) obj;
-            return this.index == that.index;
+            return false;
         }
         
         @Override
@@ -624,20 +590,18 @@ public class SimplePolygonalMesh3D implements Mesh3D
             return faceVertices;
         }
         
+        
         // ===================================================================
         // Override equals and hashcode to allow indexing
         
         @Override
         public boolean equals(Object obj)
         {
-            if (!(obj instanceof Face))
+            if (obj instanceof Face face)
             {
-                return false;
+                return this.index == face.index;
             }
-            
-            Face that = (Face) obj;
-            if (this.index != that.index) return false;
-            return true;
+            return false;
         }
         
         @Override
