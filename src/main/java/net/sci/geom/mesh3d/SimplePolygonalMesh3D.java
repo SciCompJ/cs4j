@@ -41,7 +41,7 @@ public class SimplePolygonalMesh3D implements Mesh3D
     /**
      * The position of the vertices. 
      */
-    ArrayList<Point3D> vertexPositions;
+    ArrayList<Point3D> vertices;
     
     /**
      * For each face, the list of vertex indices.
@@ -57,7 +57,7 @@ public class SimplePolygonalMesh3D implements Mesh3D
      */
     public SimplePolygonalMesh3D()
     {
-        this.vertexPositions = new ArrayList<Point3D>();
+        this.vertices = new ArrayList<Point3D>();
         this.faces = new ArrayList<int[]>();
     }
     
@@ -72,8 +72,8 @@ public class SimplePolygonalMesh3D implements Mesh3D
      */
     public SimplePolygonalMesh3D(Collection<Point3D> vertices, Collection<int[]> faces)
     {
-        this.vertexPositions = new ArrayList<Point3D>(vertices.size());
-        this.vertexPositions.addAll(vertices);
+        this.vertices = new ArrayList<Point3D>(vertices.size());
+        this.vertices.addAll(vertices);
         this.faces = new ArrayList<int[]>(faces.size());
         this.faces.addAll(faces);
     }
@@ -89,7 +89,7 @@ public class SimplePolygonalMesh3D implements Mesh3D
      */
     public SimplePolygonalMesh3D(int nv, int nf)
     {
-        this.vertexPositions = new ArrayList<Point3D>(nv);
+        this.vertices = new ArrayList<Point3D>(nv);
         this.faces = new ArrayList<int[]>(nf);
     }
 
@@ -108,9 +108,9 @@ public class SimplePolygonalMesh3D implements Mesh3D
     {
         double minDist = Double.POSITIVE_INFINITY;
         int index = -1;
-        for (int i = 0; i < vertexPositions.size(); i++)
+        for (int i = 0; i < vertices.size(); i++)
         {
-            double dist = vertexPositions.get(i).distance(point);
+            double dist = vertices.get(i).distance(point);
             if (dist < minDist)
             {
                 minDist = dist;
@@ -127,7 +127,7 @@ public class SimplePolygonalMesh3D implements Mesh3D
     @Override
     public Collection<Mesh3D.Face> vertexFaces(Mesh3D.Vertex vertex)
     {
-        int index = getVertex(vertex).index;
+        int index = castVertex(vertex).index;
         ArrayList<Mesh3D.Face> vertexFaces = new ArrayList<Mesh3D.Face>(6);
         for (int iFace = 0; iFace < faces.size(); iFace++)
         {
@@ -147,7 +147,7 @@ public class SimplePolygonalMesh3D implements Mesh3D
     @Override
     public Collection<? extends Mesh3D.Vertex> vertexNeighbors(Mesh3D.Vertex vertex)
     {
-        int index = getVertex(vertex).index;
+        int index = castVertex(vertex).index;
         
         // identifies indices of neighbor vertices by iterating over faces
         TreeSet<Integer> neighInds = new TreeSet<>();
@@ -195,7 +195,7 @@ public class SimplePolygonalMesh3D implements Mesh3D
     @Override
     public Collection<? extends Mesh3D.Vertex> faceVertices(Mesh3D.Face face)
     {
-        int[] inds = faces.get(getFace(face).index);
+        int[] inds = faces.get(castFace(face).index);
         return IntStream.of(inds).mapToObj(i -> new Vertex(i)).toList();
     }
 
@@ -206,7 +206,7 @@ public class SimplePolygonalMesh3D implements Mesh3D
     @Override
     public int vertexCount()
     {
-        return vertexPositions.size();
+        return vertices.size();
     }
 
     @Override
@@ -231,8 +231,8 @@ public class SimplePolygonalMesh3D implements Mesh3D
      */
     public Vertex addVertex(Point3D position)
     {
-        int index = vertexPositions.size();
-        vertexPositions.add(position);
+        int index = vertices.size();
+        vertices.add(position);
         return new Vertex(index);
     }
 
@@ -258,23 +258,19 @@ public class SimplePolygonalMesh3D implements Mesh3D
      */
     public int indexOf(Mesh3D.Vertex vertex)
     {
-        if (vertex instanceof Vertex)
-        {
-            return ((Vertex) vertex).index;
-        }
-        
+        if (vertex instanceof Vertex vertex2) return  vertex2.index;
         throw new IllegalArgumentException("Vertex should be an instance of inner Vertex implementation");
     }
 
     public Point3D vertexPosition(int index)
     {
-        return vertexPositions.get(index);
+        return vertices.get(index);
     }
 
     @Override
     public Collection<Point3D> vertexPositions()
     {
-        return vertexPositions;
+        return vertices;
     }
 
     /**
@@ -284,13 +280,10 @@ public class SimplePolygonalMesh3D implements Mesh3D
      *            the Vertex instance
      * @return the same instance casted to local Vertex implementation
      */
-    private Vertex getVertex(Mesh3D.Vertex vertex)
+    private Vertex castVertex(Mesh3D.Vertex vertex)
     {
-        if (!(vertex instanceof Vertex))
-        {
-            throw new IllegalArgumentException("Vertex should be an instance of inner Vertex implementation");
-        }
-        return (Vertex) vertex;
+        if (vertex instanceof Vertex vertex2) return vertex2;
+        throw new IllegalArgumentException("Vertex should be an instance of inner Vertex implementation");
     }
 
 
@@ -359,7 +352,7 @@ public class SimplePolygonalMesh3D implements Mesh3D
         ArrayList<Point3D> faceVertices = new ArrayList<>(inds.length);
         for (int index : inds)
         {
-            faceVertices.add(this.vertexPositions.get(index));
+            faceVertices.add(this.vertices.get(index));
         }
         return new DefaultPolygon3D(faceVertices);
     }
@@ -381,7 +374,6 @@ public class SimplePolygonalMesh3D implements Mesh3D
     public int indexOf(Mesh3D.Face face)
     {
         if (face instanceof Face face2) return face2.index;
-
         throw new IllegalArgumentException("Face must be an instance of inner Face implementation");
     }
 
@@ -392,7 +384,7 @@ public class SimplePolygonalMesh3D implements Mesh3D
      *            the Face instance
      * @return the same instance casted to local Face implementation
      */
-    private Face getFace(Mesh3D.Face face)
+    private Face castFace(Mesh3D.Face face)
     {
         if (face instanceof Face face2) return face2;
         throw new IllegalArgumentException("Face must be an instance of inner Face implementation");
@@ -439,7 +431,7 @@ public class SimplePolygonalMesh3D implements Mesh3D
     @Override
     public Bounds3D bounds()
     {
-        return Bounds3D.of(vertexPositions);
+        return Bounds3D.of(vertices);
     }
     
     /* (non-Javadoc)
@@ -493,7 +485,7 @@ public class SimplePolygonalMesh3D implements Mesh3D
         @Override
         public Point3D position()
         {
-            return vertexPositions.get(index);
+            return vertices.get(index);
         }
 
         @Override
@@ -535,7 +527,7 @@ public class SimplePolygonalMesh3D implements Mesh3D
         @Override
         public boolean hasNext()
         {
-            return index < vertexPositions.size();
+            return index < vertices.size();
         }
         
         @Override
@@ -568,9 +560,9 @@ public class SimplePolygonalMesh3D implements Mesh3D
         {
             int[] inds = faces.get(this.index);
             return Vector3D.crossProduct(
-                    vertexPositions.get(inds[0]), 
-                    vertexPositions.get(inds[1]),
-                    vertexPositions.get(inds[2]));
+                    vertices.get(inds[0]), 
+                    vertices.get(inds[1]),
+                    vertices.get(inds[2]));
         }
         
         @Override

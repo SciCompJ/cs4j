@@ -16,9 +16,9 @@ import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.Vector3D;
 
 /**
- * A simple class for representing immutable triangular meshes in 3D.
+ * A simple class for representing triangle meshes in 3D with limited edition possibilities.
  * 
- * Specificities of this implementation:
+ * Specific features of this implementation:
  * <ul>
  * <li>All faces are triangles.</li>
  * <li>Limited edition possibilities. Vertices and faces can be added, but not removed.</li>
@@ -39,7 +39,7 @@ public class SimpleTriMesh3D implements TriMesh3D
     /**
      * The position of the vertices. 
      */
-    ArrayList<Point3D> vertexPositions;
+    ArrayList<Point3D> vertices;
     
     /**
      * For each face, the triplet of vertex indices.
@@ -55,7 +55,7 @@ public class SimpleTriMesh3D implements TriMesh3D
      */
     public SimpleTriMesh3D()
     {
-        this.vertexPositions = new ArrayList<Point3D>();
+        this.vertices = new ArrayList<Point3D>();
         this.faces = new ArrayList<int[]>();
     }
     
@@ -70,7 +70,7 @@ public class SimpleTriMesh3D implements TriMesh3D
      */
     public SimpleTriMesh3D(int nv, int nf)
     {
-        this.vertexPositions = new ArrayList<Point3D>(nv);
+        this.vertices = new ArrayList<Point3D>(nv);
         this.faces = new ArrayList<int[]>(nf);
     }
 
@@ -85,7 +85,7 @@ public class SimpleTriMesh3D implements TriMesh3D
      */
     public SimpleTriMesh3D(Point3D[] vertices, int[][] faces)
     {
-        this.vertexPositions = new ArrayList<>(Arrays.asList(vertices));
+        this.vertices = new ArrayList<>(Arrays.asList(vertices));
         this.faces = new ArrayList<>(Arrays.asList(faces));
     }
 
@@ -100,7 +100,7 @@ public class SimpleTriMesh3D implements TriMesh3D
      */
     public SimpleTriMesh3D(ArrayList<Point3D> vertices, ArrayList<int[]> faces)
     {
-        this.vertexPositions = vertices;
+        this.vertices = vertices;
         this.faces = faces;
     }
 
@@ -118,15 +118,12 @@ public class SimpleTriMesh3D implements TriMesh3D
         double surf = 0;
         
         // Computes the sum of the norm of the cross products.
-        for (int[] faceIndices : faces)
+        for (int[] inds : faces)
         {
-            Point3D v1 = this.vertexPositions.get(faceIndices[0]);
-            Point3D v2 = this.vertexPositions.get(faceIndices[1]);
-            Point3D v3 = this.vertexPositions.get(faceIndices[2]);
-            
-            Vector3D v12 = new Vector3D(v1, v2);
-            Vector3D v13 = new Vector3D(v1, v3);
-            surf += Vector3D.crossProduct(v12,  v13).norm();
+            Point3D v1 = this.vertices.get(inds[0]);
+            Point3D v2 = this.vertices.get(inds[1]);
+            Point3D v3 = this.vertices.get(inds[2]);
+            surf += Vector3D.crossProduct(v1, v2, v3).norm();
         }
 
         return surf / 2;
@@ -143,9 +140,9 @@ public class SimpleTriMesh3D implements TriMesh3D
     {
         double minDist = Double.POSITIVE_INFINITY;
         int index = -1;
-        for (int i = 0; i < vertexPositions.size(); i++)
+        for (int i = 0; i < vertices.size(); i++)
         {
-            double dist = vertexPositions.get(i).distance(point);
+            double dist = vertices.get(i).distance(point);
             if (dist < minDist)
             {
                 minDist = dist;
@@ -163,7 +160,7 @@ public class SimpleTriMesh3D implements TriMesh3D
     public Collection<TriMesh3D.Face> vertexFaces(Mesh3D.Vertex vertex)
     {
         // pre-allocate result array
-        int index = getVertex(vertex).index;
+        int index = castVertex(vertex).index;
         ArrayList<TriMesh3D.Face> vertexFaces = new ArrayList<TriMesh3D.Face>(6);
         
         // iterate on face indices to avoid creating face instances
@@ -181,7 +178,7 @@ public class SimpleTriMesh3D implements TriMesh3D
     @Override
     public Collection<? extends Mesh3D.Vertex> vertexNeighbors(Mesh3D.Vertex vertex)
     {
-        int index = getVertex(vertex).index;
+        int index = castVertex(vertex).index;
         
         // identifies indices of neighbor vertices by iterating over faces
         TreeSet<Integer> neighInds = new TreeSet<>();
@@ -216,7 +213,7 @@ public class SimpleTriMesh3D implements TriMesh3D
     @Override
     public Collection<Mesh3D.Vertex> faceVertices(Mesh3D.Face face)
     {
-        int[] inds = faces.get(getFace(face).index);
+        int[] inds = faces.get(castFace(face).index);
         ArrayList<Mesh3D.Vertex> verts = new ArrayList<Mesh3D.Vertex>(3);
         verts.add(new Vertex(inds[0]));
         verts.add(new Vertex(inds[1]));
@@ -231,7 +228,7 @@ public class SimpleTriMesh3D implements TriMesh3D
     @Override
     public int vertexCount()
     {
-        return vertexPositions.size();
+        return vertices.size();
     }
 
     @Override
@@ -256,8 +253,8 @@ public class SimpleTriMesh3D implements TriMesh3D
      */
     public Vertex addVertex(Point3D position)
     {
-        int index = vertexPositions.size();
-        vertexPositions.add(position);
+        int index = vertices.size();
+        vertices.add(position);
         return new Vertex(index);
     }
 
@@ -282,23 +279,19 @@ public class SimpleTriMesh3D implements TriMesh3D
 	 */
     public int indexOf(Mesh3D.Vertex vertex)
     {
-    	if (vertex instanceof Vertex)
-    	{
-    	    return ((Vertex) vertex).index;		
-    	}
-
+    	if (vertex instanceof Vertex vertex2) return vertex2.index;
     	throw new IllegalArgumentException("Vertex should be an instance of inner Vertex implementation");
     }
 
     public Point3D vertexPosition(int index)
     {
-        return vertexPositions.get(index);
+        return vertices.get(index);
     }
 
     @Override
     public Collection<Point3D> vertexPositions()
     {
-        return vertexPositions;
+        return vertices;
     }
 
     /**
@@ -308,13 +301,10 @@ public class SimpleTriMesh3D implements TriMesh3D
      *            the Vertex instance
      * @return the same instance casted to local Vertex implementation
      */
-    private Vertex getVertex(Mesh3D.Vertex vertex)
+    private Vertex castVertex(Mesh3D.Vertex vertex)
     {
-        if (!(vertex instanceof Vertex))
-        {
-            throw new IllegalArgumentException("Vertex should be an instance of inner Vertex implementation");
-        }
-        return (Vertex) vertex;
+        if (vertex instanceof Vertex vertex2) return vertex2;
+        throw new IllegalArgumentException("Vertex should be an instance of inner Vertex implementation");
     }
 
 
@@ -353,9 +343,9 @@ public class SimpleTriMesh3D implements TriMesh3D
     @Override
     public Mesh3D.Face addFace(Mesh3D.Vertex v1, Mesh3D.Vertex v2, Mesh3D.Vertex v3)
     {
-        int iv1 = getVertex(v1).index;
-        int iv2 = getVertex(v2).index;
-        int iv3 = getVertex(v3).index;
+        int iv1 = castVertex(v1).index;
+        int iv2 = castVertex(v2).index;
+        int iv3 = castVertex(v3).index;
         int index = addFace(iv1, iv2, iv3);
         return new Face(index);
     }
@@ -387,9 +377,9 @@ public class SimpleTriMesh3D implements TriMesh3D
     public Triangle3D getFacePolygon(int faceIndex)
     {
         int[] inds = faces.get(faceIndex);
-        Point3D p1 = this.vertexPositions.get(inds[0]);
-        Point3D p2 = this.vertexPositions.get(inds[1]);
-        Point3D p3 = this.vertexPositions.get(inds[2]);
+        Point3D p1 = this.vertices.get(inds[0]);
+        Point3D p2 = this.vertices.get(inds[1]);
+        Point3D p3 = this.vertices.get(inds[2]);
         
         return new Triangle3D(p1, p2, p3);
     }
@@ -428,12 +418,8 @@ public class SimpleTriMesh3D implements TriMesh3D
 	 */
     public int indexOf(Mesh3D.Face face)
     {
-    	if (face instanceof Face)
-    	{
-    		return ((Face) face).index;		
-    	}
-
-    	throw new RuntimeException("vertex does not belong to mesh");
+        if (face instanceof Face face2) return face2.index;
+        throw new IllegalArgumentException("Face should be an instance of inner Face implementation");
     }
 
     /**
@@ -443,13 +429,10 @@ public class SimpleTriMesh3D implements TriMesh3D
      *            the Face instance
      * @return the same instance casted to local Face implementation
      */
-    private Face getFace(Mesh3D.Face face)
+    private Face castFace(Mesh3D.Face face)
     {
-        if (!(face instanceof Face))
-        {
-            throw new IllegalArgumentException("Face should be an instance of inner Face implementation");
-        }
-        return (Face) face;
+        if (face instanceof Face face2) return face2;
+        throw new IllegalArgumentException("Face should be an instance of inner Face implementation");
     }
     
 
@@ -464,9 +447,9 @@ public class SimpleTriMesh3D implements TriMesh3D
     {
         for (int[] inds : faces)
         {
-            Point3D p1 = this.vertexPositions.get(inds[0]);
-            Point3D p2 = this.vertexPositions.get(inds[1]);
-            Point3D p3 = this.vertexPositions.get(inds[2]);
+            Point3D p1 = this.vertices.get(inds[0]);
+            Point3D p2 = this.vertices.get(inds[1]);
+            Point3D p3 = this.vertices.get(inds[2]);
             
             if (new Triangle3D(p1, p2, p3).contains(point, eps))
             {
@@ -487,9 +470,9 @@ public class SimpleTriMesh3D implements TriMesh3D
         
         for (int[] inds : faces)
         {
-            Point3D p1 = this.vertexPositions.get(inds[0]);
-            Point3D p2 = this.vertexPositions.get(inds[1]);
-            Point3D p3 = this.vertexPositions.get(inds[2]);
+            Point3D p1 = this.vertices.get(inds[0]);
+            Point3D p2 = this.vertices.get(inds[1]);
+            Point3D p3 = this.vertices.get(inds[2]);
             
             double dist = new Triangle3D(p1, p2, p3).distance(x, y, z);
             distMin = Math.min(distMin,  dist);
@@ -504,7 +487,7 @@ public class SimpleTriMesh3D implements TriMesh3D
     @Override
     public Bounds3D bounds()
     {
-        return Bounds3D.of(vertexPositions);
+        return Bounds3D.of(vertices);
     }
     
     /* (non-Javadoc)
@@ -557,7 +540,7 @@ public class SimpleTriMesh3D implements TriMesh3D
         @Override
         public Point3D position()
         {
-            return vertexPositions.get(index);
+            return vertices.get(index);
         }
 
         @Override
@@ -600,7 +583,7 @@ public class SimpleTriMesh3D implements TriMesh3D
         @Override
         public boolean hasNext()
         {
-            return index < vertexPositions.size();
+            return index < vertices.size();
         }
         
         @Override
@@ -626,9 +609,9 @@ public class SimpleTriMesh3D implements TriMesh3D
         public Triangle3D polygon()
         {
             int[] indices = faces.get(this.index);
-            Point3D p1 = vertexPositions.get(indices[0]);
-            Point3D p2 = vertexPositions.get(indices[1]);
-            Point3D p3 = vertexPositions.get(indices[2]);
+            Point3D p1 = vertices.get(indices[0]);
+            Point3D p2 = vertices.get(indices[1]);
+            Point3D p3 = vertices.get(indices[2]);
             
             return new Triangle3D(p1, p2, p3);    
         }
@@ -636,11 +619,8 @@ public class SimpleTriMesh3D implements TriMesh3D
         @Override
         public Vector3D normal()
         {
-            int[] indices = faces.get(this.index);
-            Point3D p1 = vertexPositions.get(indices[0]);
-            Vector3D v12 = new Vector3D(p1, vertexPosition(indices[1]));
-            Vector3D v13 = new Vector3D(p1, vertexPosition(indices[2]));
-            return Vector3D.crossProduct(v12, v13);
+            int[] inds = faces.get(this.index);
+            return Vector3D.crossProduct(vertices.get(inds[0]), vertices.get(inds[1]), vertices.get(inds[2]));
         }
         
         public Collection<Mesh3D.Vertex> vertices()
