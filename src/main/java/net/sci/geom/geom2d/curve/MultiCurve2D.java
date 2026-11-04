@@ -121,10 +121,10 @@ public class MultiCurve2D implements CurveShape2D
         for (Curve2D curve : curves)
         {
             Bounds2D box = curve.bounds();
-            xmin = Math.min(xmin, box.xMin());
-            xmax = Math.max(xmax, box.xMax());
-            ymin = Math.min(ymin, box.yMin());
-            ymax = Math.max(ymax, box.yMax());
+            xmin = Math.min(xmin, box.minX());
+            xmax = Math.max(xmax, box.maxX());
+            ymin = Math.min(ymin, box.minY());
+            ymax = Math.max(ymax, box.maxY());
         }
         
         return new Bounds2D(xmin, xmax, ymin, ymax);

@@ -163,10 +163,10 @@ public class ImageHistograms
         
         // compute bounding box of domain to avoid unnecessary computations
         Bounds2D bbox = domain.bounds();
-        int xmin = (int) Math.max(0, Math.floor(bbox.xMin()));
-        int xmax = (int) Math.min(array.size(0), Math.ceil(bbox.xMax()));
-        int ymin = (int) Math.max(0, Math.floor(bbox.yMin()));
-        int ymax = (int) Math.min(array.size(1), Math.ceil(bbox.yMax()));
+        int xmin = (int) Math.max(0, Math.floor(bbox.minX()));
+        int xmax = (int) Math.min(array.size(0), Math.ceil(bbox.maxX()));
+        int ymin = (int) Math.max(0, Math.floor(bbox.minY()));
+        int ymax = (int) Math.min(array.size(1), Math.ceil(bbox.maxY()));
         
         // iterate over samples to update the histogram
         for (int y = ymin; y < ymax; y++)
@@ -205,10 +205,10 @@ public class ImageHistograms
         
         // compute bounding box f domain to avoid unnecessary computations
         Bounds2D bbox = domain.bounds();
-        int xmin = (int) Math.max(0, Math.floor(bbox.xMin()));
-        int xmax = (int) Math.min(array.size(0), Math.ceil(bbox.xMax()));
-        int ymin = (int) Math.max(0, Math.floor(bbox.yMin()));
-        int ymax = (int) Math.min(array.size(1), Math.ceil(bbox.yMax()));
+        int xmin = (int) Math.max(0, Math.floor(bbox.minX()));
+        int xmax = (int) Math.min(array.size(0), Math.ceil(bbox.maxX()));
+        int ymin = (int) Math.max(0, Math.floor(bbox.minY()));
+        int ymax = (int) Math.min(array.size(1), Math.ceil(bbox.maxY()));
         
         // iterate over samples to update the histogram
         for (int y = ymin; y < ymax; y++)

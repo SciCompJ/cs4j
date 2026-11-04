@@ -107,12 +107,12 @@ public class DefaultPolygon3DTest
         DefaultPolygon3D poly = new DefaultPolygon3D(points);
         
         Bounds3D bounds = poly.bounds();
-        assertEquals(bounds.xMin(), 10, 0.01);
-        assertEquals(bounds.xMax(), 20, 0.01);
-        assertEquals(bounds.yMin(), 10, 0.01);
-        assertEquals(bounds.yMax(), 20, 0.01);
-        assertEquals(bounds.zMin(), 10, 0.01);
-        assertEquals(bounds.zMax(), 20, 0.01);
+        assertEquals(bounds.minX(), 10, 0.01);
+        assertEquals(bounds.maxX(), 20, 0.01);
+        assertEquals(bounds.minY(), 10, 0.01);
+        assertEquals(bounds.maxY(), 20, 0.01);
+        assertEquals(bounds.minZ(), 10, 0.01);
+        assertEquals(bounds.maxZ(), 20, 0.01);
     }
     
 }

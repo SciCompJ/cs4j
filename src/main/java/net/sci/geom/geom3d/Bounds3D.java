@@ -149,47 +149,47 @@ public class Bounds3D implements Bounds
     // ===================================================================
     // Accessors to Bounds3D fields
     
-    public double xMin()
+    public double minX()
     {
         return xmin;
     }
     
-    public double xMax()
+    public double maxX()
     {
         return xmax;
     }
     
-    public double yMin()
+    public double minY()
     {
         return ymin;
     }
     
-    public double yMax()
+    public double maxY()
     {
         return ymax;
     }
     
-    public double zMin()
+    public double minZ()
     {
         return zmin;
     }
     
-    public double zMax()
+    public double maxZ()
     {
         return zmax;
     }
     
-    public double xExtent()
+    public double extentX()
     {
         return xmax - xmin;
     }
     
-    public double yExtent()
+    public double extentY()
     {
         return ymax - ymin;
     }
     
-    public double zExtent()
+    public double extentZ()
     {
         return zmax - zmin;
     }

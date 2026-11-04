@@ -72,12 +72,12 @@ public class Ellipsoid3DTest
         Bounds3D exp = new Bounds3D(50-30, 50+30, 40-20, 40+20, 30-10, 30+10);
         
         Bounds3D bounds = elli.bounds();
-        assertEquals(exp.xMin(), bounds.xMin(), 0.01);
-        assertEquals(exp.xMax(), bounds.xMax(), 0.01);
-        assertEquals(exp.yMin(), bounds.yMin(), 0.01);
-        assertEquals(exp.yMax(), bounds.yMax(), 0.01);
-        assertEquals(exp.zMin(), bounds.zMin(), 0.01);
-        assertEquals(exp.zMax(), bounds.zMax(), 0.01);
+        assertEquals(exp.minX(), bounds.minX(), 0.01);
+        assertEquals(exp.maxX(), bounds.maxX(), 0.01);
+        assertEquals(exp.minY(), bounds.minY(), 0.01);
+        assertEquals(exp.maxY(), bounds.maxY(), 0.01);
+        assertEquals(exp.minZ(), bounds.minZ(), 0.01);
+        assertEquals(exp.maxZ(), bounds.maxZ(), 0.01);
     }
 
 }

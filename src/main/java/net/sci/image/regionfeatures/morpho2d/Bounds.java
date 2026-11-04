@@ -138,10 +138,10 @@ public class Bounds extends AlgoStub implements RegionTabularFeature
                 Bounds2D bound = array[r];
                 
                 // put bounds values
-                table.setValue(r, colNames[0], bound.xMin());
-                table.setValue(r, colNames[1], bound.xMax());
-                table.setValue(r, colNames[2], bound.yMin());
-                table.setValue(r, colNames[3], bound.yMax());
+                table.setValue(r, colNames[0], bound.minX());
+                table.setValue(r, colNames[1], bound.maxX());
+                table.setValue(r, colNames[2], bound.minY());
+                table.setValue(r, colNames[3], bound.maxY());
             }
         }
         else

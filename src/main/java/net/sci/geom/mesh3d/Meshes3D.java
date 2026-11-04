@@ -27,12 +27,12 @@ public class Meshes3D
     public static final Mesh3D fromBounds(Bounds3D bounds)
     {
         // retrieve min/max coords
-        double xmin = bounds.xMin();
-        double xmax = bounds.xMax();
-        double ymin = bounds.yMin();
-        double ymax = bounds.yMax();
-        double zmin = bounds.zMin();
-        double zmax = bounds.zMax();
+        double xmin = bounds.minX();
+        double xmax = bounds.maxX();
+        double ymin = bounds.minY();
+        double ymax = bounds.maxY();
+        double zmin = bounds.minZ();
+        double zmax = bounds.maxZ();
         SimplePolygonalMesh3D mesh = new SimplePolygonalMesh3D(8, 6);
         Mesh3D.Vertex v000 = mesh.addVertex(new Point3D(xmin, ymin, zmin));
         Mesh3D.Vertex v001 = mesh.addVertex(new Point3D(xmax, ymin, zmin));

@@ -168,12 +168,12 @@ public class QuickHull3DTest
         
         Bounds3D bounds = hull.bounds();
         
-        assertEquals(-5.0, bounds.xMin(), 0.01);
-        assertEquals(+5.0, bounds.xMax(), 0.01);
-        assertEquals(-4.0, bounds.yMin(), 0.01);
-        assertEquals(+4.0, bounds.yMax(), 0.01);
-        assertEquals(-3.0, bounds.zMin(), 0.01);
-        assertEquals(+3.0, bounds.zMax(), 0.01);
+        assertEquals(-5.0, bounds.minX(), 0.01);
+        assertEquals(+5.0, bounds.maxX(), 0.01);
+        assertEquals(-4.0, bounds.minY(), 0.01);
+        assertEquals(+4.0, bounds.maxY(), 0.01);
+        assertEquals(-3.0, bounds.minZ(), 0.01);
+        assertEquals(+3.0, bounds.maxZ(), 0.01);
     }
     
     /**

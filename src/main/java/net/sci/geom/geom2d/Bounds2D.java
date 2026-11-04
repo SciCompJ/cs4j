@@ -132,7 +132,7 @@ public final class Bounds2D implements Bounds
     // Tests of inclusion
 
     /**
-     * Checks if this box contains the given point.
+     * Checks if this box contains the specified point.
      * 
      * @param point
      *            the test point
@@ -161,7 +161,15 @@ public final class Bounds2D implements Bounds
         return true;
     }
 
-    public boolean contains(Point2D point, double eps)
+    /**
+     * Checks if this box contains the specified point, using a small tolerance
+     * for comparing coordinates.
+     * 
+     * @param point
+     *            the test point
+     * @return true if the point is inside the bounding box
+     */
+    public boolean contains(Point2D point, double tol)
     {
         if (point.x < xmin || point.x > xmax) return false;
         if (point.y < ymin || point.y > ymax) return false;
@@ -170,34 +178,34 @@ public final class Bounds2D implements Bounds
 
     
     // ===================================================================
-    // Accessors to Box2D fields
+    // Accessors to Bounds2D fields
     
-    public double xMin()
+    public double minX()
     {
         return xmin;
     }
     
-    public double xMax()
+    public double maxX()
     {
         return xmax;
     }
     
-    public double yMin()
+    public double minY()
     {
         return ymin;
     }
     
-    public double yMax()
+    public double maxY()
     {
         return ymax;
     }
     
-    public double xExtent()
+    public double extentX()
     {
         return xmax - xmin;
     }
     
-    public double yExtent()
+    public double extentY()
     {
         return ymax - ymin;
     }

@@ -115,12 +115,12 @@ public class SimplePolygonalMesh3DTest
         SimplePolygonalMesh3D mesh = createTrianglePrism();
         
         Bounds3D bounds = mesh.bounds();
-        assertEquals(10.0, bounds.xMin(), 0.01);
-        assertEquals(20.0, bounds.xMax(), 0.01);
-        assertEquals(10.0, bounds.yMin(), 0.01);
-        assertEquals(20.0, bounds.yMax(), 0.01);
-        assertEquals(10.0, bounds.zMin(), 0.01);
-        assertEquals(30.0, bounds.zMax(), 0.01);
+        assertEquals(10.0, bounds.minX(), 0.01);
+        assertEquals(20.0, bounds.maxX(), 0.01);
+        assertEquals(10.0, bounds.minY(), 0.01);
+        assertEquals(20.0, bounds.maxY(), 0.01);
+        assertEquals(10.0, bounds.minZ(), 0.01);
+        assertEquals(30.0, bounds.maxZ(), 0.01);
     }
     
     /**

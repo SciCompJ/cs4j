@@ -140,12 +140,12 @@ public class BoundingBox3D extends RegionAnalyzer3D<Bounds3D>
             table.setRowName(row, Integer.toString(label));
             
             // coordinates of bounds
-            table.setValue(row, 0, box.xMin());
-            table.setValue(row, 1, box.xMax());
-            table.setValue(row, 2, box.yMin());
-            table.setValue(row, 3, box.yMax());
-            table.setValue(row, 4, box.zMin());
-            table.setValue(row, 5, box.zMax());
+            table.setValue(row, 0, box.minX());
+            table.setValue(row, 1, box.maxX());
+            table.setValue(row, 2, box.minY());
+            table.setValue(row, 3, box.maxY());
+            table.setValue(row, 4, box.minZ());
+            table.setValue(row, 5, box.maxZ());
         }
     
         return table;

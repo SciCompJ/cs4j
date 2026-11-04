@@ -86,10 +86,10 @@ public interface Polygon2D extends PolygonalDomain2D
      */
     public static Polygon2D fromBounds(Bounds2D bounds)
     {
-        Point2D p1 = new Point2D(bounds.xMin(), bounds.yMin());
-        Point2D p2 = new Point2D(bounds.xMax(), bounds.yMin());
-        Point2D p3 = new Point2D(bounds.xMax(), bounds.yMax());
-        Point2D p4 = new Point2D(bounds.xMin(), bounds.yMax());
+        Point2D p1 = new Point2D(bounds.minX(), bounds.minY());
+        Point2D p2 = new Point2D(bounds.maxX(), bounds.minY());
+        Point2D p3 = new Point2D(bounds.maxX(), bounds.maxY());
+        Point2D p4 = new Point2D(bounds.minX(), bounds.maxY());
         return create(p1, p2, p3, p4);
     }
 

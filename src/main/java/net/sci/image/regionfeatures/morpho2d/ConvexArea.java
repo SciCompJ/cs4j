@@ -57,10 +57,10 @@ public class ConvexArea extends SingleValueFeature
             
             // determine bounds
             Bounds2D box = convexHull.bounds();
-            int xmin = (int) Math.floor(box.xMin());
-            int xmax = (int) Math.ceil(box.xMax());
-            int ymin = (int) Math.floor(box.yMin());
-            int ymax = (int) Math.ceil(box.yMax());
+            int xmin = (int) Math.floor(box.minX());
+            int xmax = (int) Math.ceil(box.maxX());
+            int ymin = (int) Math.floor(box.minY());
+            int ymax = (int) Math.ceil(box.maxY());
             
             // counts the number of pixels with integer coordinates within the convex hull
             double convexArea = 0;

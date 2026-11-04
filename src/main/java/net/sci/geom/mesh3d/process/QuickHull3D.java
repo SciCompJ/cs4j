@@ -1113,9 +1113,9 @@ public class QuickHull3D
         public double computeTolerance(Bounds3D bounds)
         {
             return factor * (
-                    Math.max(Math.abs(bounds.xMin()), Math.abs(bounds.xMax())) + 
-                    Math.max(Math.abs(bounds.yMin()), Math.abs(bounds.yMax())) +
-                    Math.max(Math.abs(bounds.zMin()), Math.abs(bounds.zMax())));
+                    Math.max(Math.abs(bounds.minX()), Math.abs(bounds.maxX())) + 
+                    Math.max(Math.abs(bounds.minY()), Math.abs(bounds.maxY())) +
+                    Math.max(Math.abs(bounds.minZ()), Math.abs(bounds.maxZ())));
         }
     }
 

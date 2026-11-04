@@ -146,10 +146,10 @@ public class MultiLinearRing2D implements Boundary2D
         for (LinearRing2D ring : rings)
         {
             Bounds2D bounds = ring.bounds();
-            xmin = Math.min(xmin, bounds.xMin());
-            xmax = Math.max(xmax, bounds.xMax());
-            ymin = Math.min(ymin, bounds.yMin());
-            ymax = Math.max(ymax, bounds.xMax());
+            xmin = Math.min(xmin, bounds.minX());
+            xmax = Math.max(xmax, bounds.maxX());
+            ymin = Math.min(ymin, bounds.minY());
+            ymax = Math.max(ymax, bounds.maxX());
         }
         
         return new Bounds2D(xmin, xmax, ymin, ymax);

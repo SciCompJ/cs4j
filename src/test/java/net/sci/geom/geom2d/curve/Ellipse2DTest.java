@@ -26,10 +26,10 @@ public class Ellipse2DTest
         Ellipse2D elli = Ellipse2D.fromCorners(p1, p2);
         
         Bounds2D bounds = elli.bounds();
-        assertEquals(10.0, bounds.xMin(), 0.01);
-        assertEquals(50.0, bounds.xMax(), 0.01);
-        assertEquals(20.0, bounds.yMin(), 0.01);
-        assertEquals(40.0, bounds.yMax(), 0.01);
+        assertEquals(10.0, bounds.minX(), 0.01);
+        assertEquals(50.0, bounds.maxX(), 0.01);
+        assertEquals(20.0, bounds.minY(), 0.01);
+        assertEquals(40.0, bounds.maxY(), 0.01);
     }
     
     /**
