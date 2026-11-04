@@ -10,6 +10,14 @@ import java.util.Collection;
  */
 public interface EdgeMesh3D extends Mesh3D
 {
+    public static EdgeMesh3D convert(Mesh3D mesh)
+    {
+        if (mesh instanceof EdgeMesh3D edgeMesh) return edgeMesh;
+        if (mesh instanceof TriMesh3D trimesh) return DefaultTriMesh3D.convert(trimesh);
+        
+        throw new RuntimeException("Unable to convert the mesh into an EdgeMesh");
+    }
+    
     /**
      * Returns the collection of edges adjacent to a given vertex.
      * 

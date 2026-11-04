@@ -23,7 +23,7 @@ public class DefaultTriMesh3DTest
     @Test
     public final void testVertices_Iterator()
     {
-        DefaultTriMesh3D mesh = (DefaultTriMesh3D) Meshes3D.createOctahedron();
+        DefaultTriMesh3D mesh = createOctahedron();
         
         int count = 0;
         for (@SuppressWarnings("unused") Mesh3D.Vertex v : mesh.vertices())
@@ -37,7 +37,7 @@ public class DefaultTriMesh3DTest
     @Test
     public final void testEdges_Iterator()
     {
-        DefaultTriMesh3D mesh = (DefaultTriMesh3D) Meshes3D.createOctahedron();
+        DefaultTriMesh3D mesh = createOctahedron();
         
         int count = 0;
         for (@SuppressWarnings("unused") Mesh3D.Edge e : mesh.edges())
@@ -51,7 +51,7 @@ public class DefaultTriMesh3DTest
     @Test
     public final void testFaces_Iterator()
     {
-        DefaultTriMesh3D mesh = (DefaultTriMesh3D) Meshes3D.createOctahedron();
+        DefaultTriMesh3D mesh = createOctahedron();
         
         int count = 0;
         for (@SuppressWarnings("unused") Mesh3D.Face f : mesh.faces())
@@ -66,8 +66,7 @@ public class DefaultTriMesh3DTest
     public final void testEdges()
     {
         // Create an octahedron
-        DefaultTriMesh3D mesh = (DefaultTriMesh3D) Meshes3D.createOctahedron();
-        
+        DefaultTriMesh3D mesh = createOctahedron();
         assertEquals(12, mesh.edgeCount());
     }
     
@@ -76,7 +75,7 @@ public class DefaultTriMesh3DTest
     public final void testIntersectEdgesWithPlane()
     {
         // Create an octahedron
-        DefaultTriMesh3D mesh = (DefaultTriMesh3D) Meshes3D.createOctahedron();
+        DefaultTriMesh3D mesh = createOctahedron();
         
         Point3D p0 = new Point3D(0, 0, .5);
         Vector3D v1 = new Vector3D(1, 0, 0);
@@ -142,5 +141,31 @@ public class DefaultTriMesh3DTest
         
         assertEquals(res.vertexCount(), 4);
         assertEquals(res.faceCount(), 4);
+    }
+    
+    /**
+     * Creates a regular Octahedron, with eight faces, and six vertices located at
+     * extremity of one of the unit vectors (in each direction).
+     * 
+     * @return a Mesh instance representing an octahedron
+     */
+    public static final DefaultTriMesh3D createOctahedron()
+    {
+        DefaultTriMesh3D mesh = new DefaultTriMesh3D();
+        mesh.addVertex(new Point3D( 1,  0,  0));
+        mesh.addVertex(new Point3D( 0,  1,  0));
+        mesh.addVertex(new Point3D(-1,  0,  0));
+        mesh.addVertex(new Point3D( 0, -1,  0));
+        mesh.addVertex(new Point3D( 0,  0,  1));
+        mesh.addVertex(new Point3D( 0,  0, -1));
+        mesh.addFace(0, 1, 4);
+        mesh.addFace(1, 2, 4);
+        mesh.addFace(2, 3, 4);
+        mesh.addFace(3, 0, 4);
+        mesh.addFace(0, 5, 1);
+        mesh.addFace(1, 5, 2);
+        mesh.addFace(2, 5, 3);
+        mesh.addFace(0, 3, 5);
+        return mesh;
     }
 }

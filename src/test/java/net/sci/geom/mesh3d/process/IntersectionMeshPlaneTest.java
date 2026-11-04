@@ -32,7 +32,7 @@ public class IntersectionMeshPlaneTest
     @Test
     public final void testIntersectionMeshPlane_octahedron_xyPlane_z05()
     {
-        EdgeMesh3D mesh = (EdgeMesh3D) Meshes3D.createOctahedron();
+        EdgeMesh3D mesh = EdgeMesh3D.convert(Meshes3D.createOctahedron());
         Plane3D plane = new Plane3D(new Point3D(0, 0, 0.5), new Vector3D(0, 0, 1));
         
         Collection<Polyline3D> curves = IntersectionMeshPlane.intersectionMeshPlane(mesh, plane);
@@ -50,7 +50,7 @@ public class IntersectionMeshPlaneTest
     @Test
     public final void testIntersectionMeshPlane_octahedron_yzPlane_x05()
     {
-        EdgeMesh3D mesh = (EdgeMesh3D) Meshes3D.createOctahedron();
+        EdgeMesh3D mesh =EdgeMesh3D.convert(Meshes3D.createOctahedron());
         Plane3D plane = new Plane3D(new Point3D(0.5, 0, 0), new Vector3D(1, 0, 0));
         
         Collection<Polyline3D> curves = IntersectionMeshPlane.intersectionMeshPlane(mesh, plane);
