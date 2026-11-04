@@ -31,7 +31,7 @@ import net.sci.geom.geom3d.Vector3D;
  * @author dlegland
  *
  */
-public class SimpleTriMesh3D implements TriMesh3D
+public class SimpleTriMesh3D implements TriMesh3D, IndexedMesh3D
 {
     // ===================================================================
     // Class variables
@@ -403,7 +403,8 @@ public class SimpleTriMesh3D implements TriMesh3D
      *            the face index
      * @return the array of vertex indices for the face
      */
-    public int[] getFaceVertexIndices(int faceIndex)
+    @Override
+    public int[] faceVertexIndices(int faceIndex)
     {
         return faces.get(faceIndex);
     }

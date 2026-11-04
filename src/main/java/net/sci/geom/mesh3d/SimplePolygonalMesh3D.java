@@ -33,7 +33,7 @@ import net.sci.geom.geom3d.impl.DefaultPolygon3D;
  * @author dlegland
  *
  */
-public class SimplePolygonalMesh3D implements Mesh3D
+public class SimplePolygonalMesh3D implements Mesh3D, IndexedMesh3D
 {
     // ===================================================================
     // Class variables
@@ -199,7 +199,13 @@ public class SimplePolygonalMesh3D implements Mesh3D
         return IntStream.of(inds).mapToObj(i -> new Vertex(i)).toList();
     }
 
-
+    @Override
+    public int[] faceVertexIndices(int faceIndex)
+    {
+        return faces.get(faceIndex);
+    }
+    
+    
     // ===================================================================
     // Management of vertices
 

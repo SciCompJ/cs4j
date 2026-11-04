@@ -24,7 +24,7 @@ import net.sci.geom.geom3d.Vector3D;
  * @author dlegland
  *
  */
-public class DefaultTriMesh3D implements TriMesh3D, EdgeMesh3D
+public class DefaultTriMesh3D implements TriMesh3D, EdgeMesh3D, IndexedMesh3D
 {
     // ===================================================================
     // Static factories
@@ -701,6 +701,19 @@ public class DefaultTriMesh3D implements TriMesh3D, EdgeMesh3D
         return new Face(index);
     }
     
+    /**
+     * Returns the vertex indices for the face corresponding to the given index.
+     * 
+     * @param faceIndex
+     *            the face index
+     * @return the array of vertex indices for the face
+     */
+    @Override
+    public int[] faceVertexIndices(int faceIndex)
+    {
+        return faces.get(faceIndex);
+    }
+
     /**
 	 * Returns the index of the specified face.
 	 * 
