@@ -32,7 +32,7 @@ public class AffineTransform3DTest
      * Test method for {@link net.sci.geom.geom3d.AffineTransform3D#compose(net.sci.geom.geom3d.AffineTransform3D)}.
      */
     @Test
-    public final void test_static_compose_TraRotTra()
+    public final void test_compose_static_TraRotTra()
     {
         AffineTransform3D tra = AffineTransform3D.createTranslation(30, 40, 50);
         AffineTransform3D rot = AffineTransform3D.createRotationOx(Math.toRadians(30));
@@ -40,6 +40,52 @@ public class AffineTransform3DTest
         AffineTransform3D trans = AffineTransform3D.compose(tra, rot, tra.inverse());
                
         AffineTransform3D exp = AffineTransform3D.createRotationOx(new Point3D(30, 40, 50), Math.toRadians(30));
+        assertTrue(exp.almostEquals(trans, 0.01));
+    }
+
+    /**
+     * Test method for {@link net.sci.geom.geom3d.AffineTransform3D#compose(net.sci.geom.geom3d.AffineTransform3D)}.
+     */
+    @Test
+    public final void test_compose_static_Tra2()
+    {
+        AffineTransform3D tra1 = AffineTransform3D.createTranslation(30, 40, 50);
+        AffineTransform3D tra2 = AffineTransform3D.createTranslation(2, 3, 4);
+        AffineTransform3D exp = AffineTransform3D.createTranslation(32, 43, 54);
+        
+        AffineTransform3D trans = AffineTransform3D.compose(tra1, tra2);
+               
+        assertTrue(exp.almostEquals(trans, 0.01));
+    }
+
+    /**
+     * Test method for {@link net.sci.geom.geom3d.AffineTransform3D#compose(net.sci.geom.geom3d.AffineTransform3D)}.
+     */
+    @Test
+    public final void test_compose_static_RotXRotZ()
+    {
+        AffineTransform3D rot1 = AffineTransform3D.createRotationOx(Math.PI/3);
+        AffineTransform3D rot2 = AffineTransform3D.createRotationOz(Math.PI/4);
+        
+        AffineTransform3D trans = AffineTransform3D.compose(rot2, rot1);
+        
+        AffineTransform3D exp = rot2.compose(rot1);
+        assertTrue(exp.almostEquals(trans, 0.01));
+    }
+
+    /**
+     * Test method for {@link net.sci.geom.geom3d.AffineTransform3D#compose(net.sci.geom.geom3d.AffineTransform3D)}.
+     */
+    @Test
+    public final void test_compose_static_RotXRotYRotZ()
+    {
+        AffineTransform3D rot1 = AffineTransform3D.createRotationOx(Math.PI/3);
+        AffineTransform3D rot2 = AffineTransform3D.createRotationOy(Math.PI/4);
+        AffineTransform3D rot3 = AffineTransform3D.createRotationOz(Math.PI/5);
+        
+        AffineTransform3D trans = AffineTransform3D.compose(rot3, rot2, rot1);
+        
+        AffineTransform3D exp = rot3.compose(rot2).compose(rot1);
         assertTrue(exp.almostEquals(trans, 0.01));
     }
 
@@ -55,6 +101,23 @@ public class AffineTransform3DTest
         AffineTransform3D rot4 = AffineTransform3D.createRotationOx(-Math.PI/2);
         
         AffineTransform3D trans = rot4.compose(rot3).compose(rot2).compose(rot1);
+        
+        AffineTransform3D exp = AffineTransform3D.IDENTITY;
+        assertTrue(exp.almostEquals(trans, 0.01));
+    }
+
+    /**
+     * Test method for {@link net.sci.geom.geom3d.AffineTransform3D#compose(net.sci.geom.geom3d.AffineTransform3D...)}.
+     */
+    @Test
+    public final void test_compose_static_RotationsZXYX()
+    {
+        AffineTransform3D rot1 = AffineTransform3D.createRotationOz(Math.PI/2);
+        AffineTransform3D rot2 = AffineTransform3D.createRotationOx(Math.PI/2);
+        AffineTransform3D rot3 = AffineTransform3D.createRotationOy(Math.PI/2);
+        AffineTransform3D rot4 = AffineTransform3D.createRotationOx(-Math.PI/2);
+        
+        AffineTransform3D trans = AffineTransform3D.compose(rot4, rot3, rot2, rot1);
         
         AffineTransform3D exp = AffineTransform3D.IDENTITY;
         assertTrue(exp.almostEquals(trans, 0.01));
