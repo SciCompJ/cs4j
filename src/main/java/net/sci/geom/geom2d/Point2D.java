@@ -361,14 +361,13 @@ public final class Point2D implements PointShape2D, Point
     // Implementation of the Point interface
 
     @Override
-    public double get(int dim)
+    public double coord(int dim)
     {
         return switch (dim)
         {
             case 0 -> this.x;
             case 1 -> this.y;
-            default -> throw new IllegalArgumentException(
-                    "Dimension should be either 0 or 1");
+            default -> throw new IllegalArgumentException("Dimension should be either 0 or 1");
         };
     }
     

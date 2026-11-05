@@ -417,7 +417,7 @@ public class QuickHull3D
         int imax = 0;
         for (int d = 0; d < 3; d++)
         {
-            double extent = extremeVertices[d][1].position.get(d) - extremeVertices[d][0].position.get(d);
+            double extent = extremeVertices[d][1].position.coord(d) - extremeVertices[d][0].position.coord(d);
             if (extent > maxExtent)
             {
                 maxExtent = extent;

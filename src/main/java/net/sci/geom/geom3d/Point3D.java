@@ -397,7 +397,7 @@ public final class Point3D implements Point, Geometry3D
     // Implements Point interface
 
     @Override
-    public double get(int dim)
+    public double coord(int dim)
     {
         return switch (dim)
         {
