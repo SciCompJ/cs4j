@@ -8,8 +8,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Scanner;
 
 import net.sci.algo.AlgoStub;
 import net.sci.geom.geom3d.Point3D;
@@ -18,7 +16,10 @@ import net.sci.geom.mesh3d.SimplePolygonalMesh3D;
 import net.sci.geom.mesh3d.SimpleTriMesh3D;
 
 /**
- * Read a 3D mesh from a text file using the OFF format.
+ * Reads a 3D mesh from a text file using the OFF format.
+ * 
+ * Can read meshes with arbitrary number of vertices per face. However, reading
+ * additional data from mesh is not supported.
  * 
  * 
  * @see OffMeshWriter
@@ -42,8 +43,8 @@ public class OffMeshReader extends AlgoStub implements MeshReader
         LineNumberReader reader = new LineNumberReader(new FileReader(file));
         
         // First line should contain "OFF" string
-        String line = readNextNonCommentLine(reader);
-        if ("OFF".compareToIgnoreCase(line) != 0)
+        String headerLine = readNextNonCommentLine(reader);
+        if ("OFF".compareToIgnoreCase(headerLine) != 0)
         {
             reader.close();
             throw new RuntimeException("Not a valid OFF file");
@@ -51,24 +52,25 @@ public class OffMeshReader extends AlgoStub implements MeshReader
         
         // Parses number of vertices and of faces
         String dimString = readNextNonCommentLine(reader);
-        Scanner scanner = new Scanner(dimString);
-        int nVertices = scanner.nextInt();
-        int nFaces = scanner.nextInt();
-        scanner.close();
+        String[] tokens = dimString.split(" ");
+        int nVertices = Integer.parseInt(tokens[0]);
+        int nFaces = Integer.parseInt(tokens[1]);
         
         // read vertices
         this.fireStatusChanged(this, "read vertices");
         ArrayList<Point3D> vertices = new ArrayList<Point3D>(nVertices); 
         for (int iVertex = 0; iVertex < nVertices; iVertex++)
         {
-            this.fireProgressChanged(this, iVertex, nVertices);
-            Scanner s = new Scanner(readNextNonCommentLine(reader));
-            s.useLocale(Locale.ENGLISH);
-            double vx = s.nextDouble();
-            double vy = s.nextDouble();
-            double vz = s.nextDouble();
+            // monitor progress only for a fraction of the lines
+            if (iVertex % 200 == 0) this.fireProgressChanged(this, iVertex, nVertices);
+            tokens = readNextNonCommentLine(reader).split(" ");
+            
+            // parse vertex coordinates
+            double vx = Double.parseDouble(tokens[0]);
+            double vy = Double.parseDouble(tokens[1]);
+            double vz = Double.parseDouble(tokens[2]);
             vertices.add(new Point3D(vx, vy, vz));
-            s.close();
+            // (drop remaining data)
         }
         
         // read faces
@@ -77,34 +79,29 @@ public class OffMeshReader extends AlgoStub implements MeshReader
         ArrayList<int[]> faces = new ArrayList<int[]>(nFaces); 
         for (int iFace = 0; iFace < nFaces; iFace++)
         {
-            this.fireProgressChanged(this, iFace, nFaces);
-            Scanner s = new Scanner(readNextNonCommentLine(reader));
-            int nvf = s.nextInt();
+            // monitor progress only for a fraction of the lines
+            if (iFace % 200 == 0) this.fireProgressChanged(this, iFace, nFaces);
+            tokens = readNextNonCommentLine(reader).split(" ");
+            
+            // parse index of face vertices
+            int nvf = Integer.parseInt(tokens[0]);
             if (nvf != 3) triMesh = false;
             int[] inds = new int[nvf];
             for (int iv = 0; iv < nvf; iv++)
             {
-                inds[iv] = s.nextInt();
-            }
+                inds[iv] = Integer.parseInt(tokens[iv + 1]);
+            }            
             faces.add(inds);
-            s.close();
+            // (drop remaining data)
         }
         
         reader.close();
 
-        // create mesh, choosing best type depending on number of vertices per face
+        // create resulting mesh, choosing the most appropriate class depending
+        // on the number of vertices per face
         this.fireStatusChanged(this, "create mesh");
-        if (triMesh)
-        {
-            SimpleTriMesh3D mesh = new SimpleTriMesh3D(nVertices, nFaces);
-            for (Point3D v : vertices) mesh.addVertex(v);
-            for (int[] face : faces) mesh.addFace(face[0], face[1], face[2]);
-            return mesh;
-        }
-        else
-        {
-            return new SimplePolygonalMesh3D(vertices, faces);
-        }
+        return triMesh ? new SimpleTriMesh3D(vertices, faces)
+                : new SimplePolygonalMesh3D(vertices, faces);
     }
     
     private String readNextNonCommentLine(LineNumberReader reader) throws IOException
