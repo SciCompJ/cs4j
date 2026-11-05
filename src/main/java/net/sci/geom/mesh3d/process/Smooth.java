@@ -37,6 +37,12 @@ public class Smooth extends AlgoStub
             throw new RuntimeException("Requires a triangular mesh as input");
         }
         
+        // check for cases that can be optimized
+        if (mesh instanceof SimpleTriMesh3D trimesh)
+        {
+            return processSimpleTriMesh(trimesh);
+        }
+        
         // number of elements in the input mesh
         int nv = mesh.vertexCount();
         int nf = mesh.faceCount();
@@ -110,5 +116,49 @@ public class Smooth extends AlgoStub
         this.fireProgressChanged(this, nf, nf);
         
         return result;
+    }
+    
+    private SimpleTriMesh3D processSimpleTriMesh(SimpleTriMesh3D mesh)
+    {
+        // number of elements in the input mesh
+        int nv = mesh.vertexCount();
+        int nf = mesh.faceCount();
+
+        
+        // keep correspondence between vertices of the original mesh and position within new mesh
+        this.fireStatusChanged(this, "initalize positions");
+        Point3D[] newPositions = new Point3D[nv];
+        for (int i = 0; i < nv; i++)
+        {
+            newPositions[i] = mesh.vertexPosition(i);   
+        }
+        
+        // Iterate faces
+        int[][] faces = new int[nf][];
+        this.fireStatusChanged(this, "Smooth positions");
+        for (int iFace = 0; iFace < nf; iFace++)
+        {
+            this.fireProgressChanged(this, iFace, nf);
+            
+            int[] inds = mesh.faceVertexIndices(iFace);
+            int iv1 = inds[0];
+            int iv2 = inds[1];
+            int iv3 = inds[2];
+            faces[iFace] = new int[] { iv1, iv2, iv3 };
+            
+            newPositions[iv1] = newPositions[iv1].plus(mesh.vertexPosition(iv2)).plus(mesh.vertexPosition(iv3)); 
+            newPositions[iv2] = newPositions[iv2].plus(mesh.vertexPosition(iv1)).plus(mesh.vertexPosition(iv3)); 
+            newPositions[iv3] = newPositions[iv3].plus(mesh.vertexPosition(iv1)).plus(mesh.vertexPosition(iv2)); 
+        }
+        this.fireProgressChanged(this, nv, nv);
+        
+        // divide by number of neighbors
+        for (int i = 0; i < nv; i++)
+        {
+            newPositions[i] = newPositions[i].dividedBy(7);
+        }
+        this.fireProgressChanged(this, 1, 1);
+        
+        return new SimpleTriMesh3D(newPositions, faces);
     }
 }

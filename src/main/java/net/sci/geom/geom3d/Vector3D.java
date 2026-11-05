@@ -7,15 +7,15 @@ import static java.lang.Math.abs;
 
 import java.util.Locale;
 
-import net.sci.array.Dimensional;
 import net.sci.array.numeric.Numeric;
+import net.sci.geom.Vector;
 
 /**
  * Implementation of a three-dimensional vector.
  * 
  * @see Point3D
  */
-public final class Vector3D implements Dimensional, Numeric<Vector3D>
+public final class Vector3D implements Vector, Numeric<Vector3D>
 {
     // ===================================================================
     // Private constants
@@ -540,6 +540,22 @@ public final class Vector3D implements Dimensional, Numeric<Vector3D>
         return new Vector3D(this.x / k, this.y / k, this.z / k);
     }
     
+
+    // ===================================================================
+    // Implements Vector interface
+
+    @Override
+    public double coord(int dim)
+    {
+        return switch (dim)
+        {
+            case 0 -> this.x;
+            case 1 -> this.y;
+            case 2 -> this.z;
+            default -> throw new IllegalArgumentException("Dimension should be either 0 or 1");
+        };
+    }
+
 
     // ===================================================================
     // Implements Dimensional interface

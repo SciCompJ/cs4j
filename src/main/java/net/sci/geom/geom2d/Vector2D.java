@@ -4,13 +4,13 @@ import static java.lang.Math.abs;
 
 import java.util.Locale;
 
-import net.sci.array.Dimensional;
 import net.sci.array.numeric.Numeric;
+import net.sci.geom.Vector;
 
 /**
  * Implementation of a two-dimensional vector.
  */
-public final class Vector2D implements Dimensional, Numeric<Vector2D>
+public final class Vector2D implements Vector, Numeric<Vector2D>
 {
     // ===================================================================
     // constants
@@ -540,16 +540,26 @@ public final class Vector2D implements Dimensional, Numeric<Vector2D>
         return new Vector2D(this.x / k, this.y / k);
     }
 
+    
     // ===================================================================
-    // Geometry methods
-    
-    
-    
+    // Implements Vector interface
+
+    @Override
+    public double coord(int dim)
+    {
+        return switch (dim)
+        {
+            case 0 -> this.x;
+            case 1 -> this.y;
+            default -> throw new IllegalArgumentException("Dimension should be either 0 or 1");
+        };
+    }
+
 
 	// ===================================================================
     // Implements Dimensional interface
 
-	/**
+    /**
 	 * Returns a dimensionality equals to 2.
 	 */
     @Override
