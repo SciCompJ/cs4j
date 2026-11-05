@@ -3,6 +3,7 @@
  */
 package net.sci.geom.mesh3d.process;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -24,7 +25,7 @@ import net.sci.geom.mesh3d.Mesh3D.Vertex;
 public class Smooth extends AlgoStub
 {
     /**
-     * Empty contructor.
+     * Default empty constructor.
      */
     public Smooth()
     {
@@ -48,7 +49,7 @@ public class Smooth extends AlgoStub
         int nf = mesh.faceCount();
 
         // keep correspondence between vertices of the original mesh and position within new mesh
-        this.fireStatusChanged(this, "initalize positions");
+        this.fireStatusChanged(this, "Initialize positions");
         Map<Mesh3D.Vertex, Point3D> refPositions = new HashMap<>();
         for (Mesh3D.Vertex vertex : mesh.vertices())
         {
@@ -58,10 +59,10 @@ public class Smooth extends AlgoStub
         // Iterate over vertices
         this.fireStatusChanged(this, "Smooth positions");
         Map<Mesh3D.Vertex, Point3D> newPositions = new HashMap<>(nv);
-        int i = 0;
+        int iVertex = 0;
         for (Mesh3D.Vertex vertex : mesh.vertices())
         {
-            this.fireProgressChanged(this, i++, nv);
+            if (iVertex++ % 500 == 0) this.fireProgressChanged(this, iVertex, nv);
             // initialize average with position of current vertex
             Point3D pos = refPositions.get(vertex);
             double xm = pos.x(), ym = pos.y(), zm = pos.z();
@@ -93,20 +94,20 @@ public class Smooth extends AlgoStub
         // create the new vertices, and keep correspondence with initial vertex
         this.fireStatusChanged(this, "Create result vertices");
         Map<Mesh3D.Vertex, Mesh3D.Vertex> vertexMap = new HashMap<>(nv);
-        i = 0;
+        iVertex = 0;
         for (Mesh3D.Vertex vertex : mesh.vertices())
         {
-            this.fireProgressChanged(this, i++, nv);
+            if (iVertex++ % 500 == 0) this.fireProgressChanged(this, iVertex, nv);
             Vertex newVertex = result.addVertex(newPositions.get(vertex));
             vertexMap.put(vertex, newVertex);
         }
         
         // also add faces, using vertex correspondence
         this.fireStatusChanged(this, "Create result faces");
-        int fIdx = 0;
+        int iFace = 0;
         for (Face face : mesh.faces())
         {
-            this.fireProgressChanged(this, fIdx++, nf);
+            if (iFace++ % 500 == 0) this.fireProgressChanged(this, iFace, nf);
             Iterator<? extends Vertex> iter = mesh.faceVertices(face).iterator();
             Vertex v1 = vertexMap.get(iter.next());
             Vertex v2 = vertexMap.get(iter.next());
@@ -123,42 +124,55 @@ public class Smooth extends AlgoStub
         // number of elements in the input mesh
         int nv = mesh.vertexCount();
         int nf = mesh.faceCount();
-
         
-        // keep correspondence between vertices of the original mesh and position within new mesh
-        this.fireStatusChanged(this, "initalize positions");
-        Point3D[] newPositions = new Point3D[nv];
+        // initialize average positions to initial position of mesh
+        // (use a factor 2 as each neighbor will be considered twice)
+        this.fireStatusChanged(this, "Initialize positions");
+        Point3D[] positions = new Point3D[nv];
         for (int i = 0; i < nv; i++)
         {
-            newPositions[i] = mesh.vertexPosition(i);   
+            positions[i] = mesh.vertexPosition(i).times(2.0);   
         }
+        int[] counts = new int[nv];
         
-        // Iterate faces
+        // Iterate over faces
         int[][] faces = new int[nf][];
         this.fireStatusChanged(this, "Smooth positions");
         for (int iFace = 0; iFace < nf; iFace++)
         {
-            this.fireProgressChanged(this, iFace, nf);
+            if (iFace % 500 == 0) this.fireProgressChanged(this, iFace, nf);
             
+            // retrieve index of neighbor vertices
             int[] inds = mesh.faceVertexIndices(iFace);
             int iv1 = inds[0];
             int iv2 = inds[1];
             int iv3 = inds[2];
-            faces[iFace] = new int[] { iv1, iv2, iv3 };
             
-            newPositions[iv1] = newPositions[iv1].plus(mesh.vertexPosition(iv2)).plus(mesh.vertexPosition(iv3)); 
-            newPositions[iv2] = newPositions[iv2].plus(mesh.vertexPosition(iv1)).plus(mesh.vertexPosition(iv3)); 
-            newPositions[iv3] = newPositions[iv3].plus(mesh.vertexPosition(iv1)).plus(mesh.vertexPosition(iv2)); 
+            // position of neighbor vertices
+            Point3D v1 = mesh.vertexPosition(iv1);
+            Point3D v2 = mesh.vertexPosition(iv2);
+            Point3D v3 = mesh.vertexPosition(iv3);
+            
+            // add position of neighbors to current position
+            positions[iv1] = positions[iv1].plus(v2.plus(v3));
+            positions[iv2] = positions[iv2].plus(v1.plus(v3));
+            positions[iv3] = positions[iv3].plus(v1.plus(v2));
+            counts[iv1] += 2;
+            counts[iv2] += 2;
+            counts[iv3] += 2;
+            
+            // also duplicate face info
+            faces[iFace] = Arrays.copyOf(inds, 3);
         }
         this.fireProgressChanged(this, nv, nv);
         
         // divide by number of neighbors
         for (int i = 0; i < nv; i++)
         {
-            newPositions[i] = newPositions[i].dividedBy(7);
+            positions[i] = positions[i].dividedBy((counts[i] + 2));
         }
         this.fireProgressChanged(this, 1, 1);
         
-        return new SimpleTriMesh3D(newPositions, faces);
+        return new SimpleTriMesh3D(positions, faces);
     }
 }
