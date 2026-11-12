@@ -38,7 +38,7 @@ public class MorphologicalMarchingCubes extends AlgoStub
      * For each of the eight vertices within the current tile, the shift along
      * each coordinate from the reference vertex.
      */
-    static final int[][] vertexPositions = {
+    public static final int[][] vertexPositions = {
             {0, 0, 0},
             {1, 0, 0},
             {0, 1, 0},
@@ -55,7 +55,7 @@ public class MorphologicalMarchingCubes extends AlgoStub
      * 
      * Indices are ordered from lower to larger index.
      */
-    static final int[][] edgeVertexIndices = {
+    public static final int[][] edgeVertexIndices = {
             // current plane
             {0, 1}, {0, 2}, {1, 3}, {2, 3},
             // vertical edges
@@ -69,7 +69,7 @@ public class MorphologicalMarchingCubes extends AlgoStub
      * the faces. Each sub array is either empty or has a length which is a
      * multiple of 3.
      */
-    static final int[][] faceEdgeIndices = {
+    public static final int[][] faceEdgeIndices = {
             {}, // 0
             {0, 1, 4}, // 1
             {0, 5, 2}, // 2
@@ -533,7 +533,7 @@ public class MorphologicalMarchingCubes extends AlgoStub
         return index;
     }
     
-    private Point3D createVertex(int x, int y, int z, int index)
+    public static final Point3D createVertex(int x, int y, int z, int index)
     {
         return switch (index)
         {
@@ -565,7 +565,7 @@ public class MorphologicalMarchingCubes extends AlgoStub
      * Stores the coordinates of a voxel within a 3D image, in image coordinates
      * (0-based).
      */
-    class IntPoint3D implements Comparable<IntPoint3D>
+    public static class IntPoint3D implements Comparable<IntPoint3D>
     {
         int x;
         int y;
