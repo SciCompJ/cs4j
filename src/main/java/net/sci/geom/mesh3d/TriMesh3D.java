@@ -16,6 +16,25 @@ import java.util.Collection;
 public interface TriMesh3D extends Mesh3D
 {
     // =============================================================
+    // Utility methods
+    
+    /**
+     * Converts the input mesh into an instance of {@code TriMesh3D}, or returns
+     * the input mesh if it is already an instance of {@code TriMesh3D}.
+     * 
+     * @param mesh
+     *            the mesh to convert
+     * @return an instance of {@code TriMesh3D} with same vertices as the input
+     *         mesh
+     */
+    public static TriMesh3D convert(Mesh3D mesh)
+    {
+        if (mesh instanceof TriMesh3D trimesh) return trimesh;
+        return Meshes3D.triangulate(mesh);
+    }
+    
+    
+    // =============================================================
     // New methods
 
     /**
