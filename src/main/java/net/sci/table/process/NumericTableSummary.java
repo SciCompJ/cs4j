@@ -14,7 +14,13 @@ import net.sci.table.TableOperator;
  */
 public class NumericTableSummary implements TableOperator
 {
-
+    /**
+     * Default empty constructor.
+     */
+    public NumericTableSummary()
+    {
+    }
+    
     @Override
     public NumericTable process(Table table)
     {
@@ -26,6 +32,13 @@ public class NumericTableSummary implements TableOperator
         return processNumeric((NumericTable) table);
     }
     
+    /**
+     * Computes summary features on the specified table.
+     * 
+     * @param table
+     *            the table to process
+     * @return a new table containing summary statistics of each column
+     */
     public NumericTable processNumeric(NumericTable table)
     {
         CategoricalAxis rowAxis = new CategoricalAxis("", new String[] {"min", "mean", "max"});

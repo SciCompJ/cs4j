@@ -141,6 +141,22 @@ public class SummaryStatistics
         return sumSq / (col.length() - 1);
     }
 
+    /**
+     * Default empty constructor.
+     */
+    public SummaryStatistics()
+    {
+    }
+    
+    /**
+     * Computes a number of summary statistics for each column of a (numeric)
+     * data table, and concatenates the results into a new table.
+     * 
+     * @param table
+     *            the table to process
+     * @return the table containing summary statistics of each column of the
+     *         original table
+     */
     public Table process(Table table)
     {
         // check all columns are numeric

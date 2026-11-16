@@ -94,6 +94,12 @@ public class DelimitedTableReader extends AlgoStub implements TableReader
     // =============================================================
     // Accessors and mutators
 
+    /**
+     * Returns the delimiter (or the set of delimiters) used to identify tokens
+     * within tables
+     * 
+     * @return the set of delimiters used to identify tokens within tables
+     */
     public String getDelimiters()
     {
         return delimiters;
@@ -105,6 +111,7 @@ public class DelimitedTableReader extends AlgoStub implements TableReader
      * @param delimiters
      *            the String containing the delimiter. May contain several
      *            delimiter characters.
+     * @return the instance of {@code TableReader}, to enable fluent interface.
      */
     public DelimitedTableReader setDelimiters(String delimiters)
     {
@@ -112,6 +119,11 @@ public class DelimitedTableReader extends AlgoStub implements TableReader
         return this;
     }
 
+    /**
+     * Checks if this reader allows for reading header.
+     * 
+     * @return true if read header option is enabled.
+     */
     public boolean isReadHeader()
     {
         return readHeader;
@@ -122,6 +134,7 @@ public class DelimitedTableReader extends AlgoStub implements TableReader
      * 
      * @param readHeader
      *            the boolean flag for reading the header
+     * @return the instance of {@code TableReader}, to enable fluent interface.
      */
     public DelimitedTableReader setReadHeader(boolean readHeader)
     {
@@ -129,6 +142,11 @@ public class DelimitedTableReader extends AlgoStub implements TableReader
         return this;
     }
 
+    /**
+     * Checks if this reader skip lines.
+     * 
+     * @return true if skip lines option is enabled.
+     */
     public int getSkipLines()
     {
         return skipLines;
@@ -140,6 +158,7 @@ public class DelimitedTableReader extends AlgoStub implements TableReader
      * 
      * @param skipLines
      *            the number of lines to skip
+     * @return the instance of {@code TableReader}, to enable fluent interface.
      */
     public DelimitedTableReader setSkipLines(int skipLines)
     {
@@ -147,6 +166,11 @@ public class DelimitedTableReader extends AlgoStub implements TableReader
         return this;
     }
 
+    /**
+     * Checks if this reader allows for reading row names.
+     * 
+     * @return true if row names option is enabled.
+     */
     public boolean isReadRowNames()
     {
         return readRowNames;
@@ -158,28 +182,11 @@ public class DelimitedTableReader extends AlgoStub implements TableReader
      * 
      * @param readRowNames
      *            the boolean flag for reading row names
+     * @return the instance of {@code TableReader}, to enable fluent interface.
      */
     public DelimitedTableReader setReadRowNames(boolean readRowNames)
     {
         this.readRowNames = readRowNames;
-        return this;
-    }
-    
-    /**
-     * Chooses whether processing of quotes should be avoided. If true,
-     * simply avoid special processing for quotes. Default is false.
-     * 
-     * @deprecated replaced by method setParseDoubleQuotes()
-     * @see #setParseDoubleQuotes(boolean)
-     * 
-     * @param ignoreQuotes
-     *            the boolean flag for ignoring the quotes
-     */
-    @Deprecated
-    public DelimitedTableReader setIgnoreQuotes(boolean ignoreQuotes)
-    {
-        this.parseDoubleQuotes = !ignoreQuotes;
-        System.err.println("Warning: methode \"setIgnoreQuotes(boolean)\" is deprecated and will be removed in a near future");
         return this;
     }
 
@@ -190,6 +197,7 @@ public class DelimitedTableReader extends AlgoStub implements TableReader
      * 
      * @param parseQuotes
      *            the boolean flag for parsing the quotes
+     * @return the instance of {@code TableReader}, to enable fluent interface.
      */
     public DelimitedTableReader setParseDoubleQuotes(boolean parseQuotes)
     {

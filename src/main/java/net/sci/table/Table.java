@@ -400,10 +400,29 @@ public interface Table
      */
     public String[] getRowNames();
     
+    /**
+     * Changes the names of the rows within the table.
+     * 
+     * @param names
+     *            the new names of the rows.
+     */
     public void setRowNames(String[] names);
 
+    /**
+     * Returns the name of the row at the specified index. May be null.
+     * 
+     * @param rowIndex
+     *            the row index
+     * @return the name of the row at the specified index. May be null.
+     */
     public String getRowName(int rowIndex);
 
+    /**
+     * Changes the name of the row at the specified index. 
+     * @param rowIndex
+     *            the row index
+     * @param newName the new name of the row
+     */
     public void setRowName(int rowIndex, String newName);
 
     
@@ -512,7 +531,7 @@ public interface Table
     }
 
     /**
-     * Display the content of the data table to standard output.
+     * Displays the content of the data table to standard output.
      */
     public default void print()
     {
@@ -542,6 +561,11 @@ public interface Table
          */
         public C get(int index);
         
+        /**
+         * Returns a new {@code Stream} object on the columns within the table.
+         * 
+         * @return a new {@code Stream} object on the columns within the table.
+         */
         public Stream<Column> stream();
     }
 }

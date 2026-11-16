@@ -73,6 +73,8 @@ public class KMeans implements TableOperator
     // New methods specific to KMeans
     
     /**
+     * Returns a table instance containing coordinates of class centroids.
+     * 
      * @return a table instance containing coordinates of class centroids.
      */
     public Table centroids()

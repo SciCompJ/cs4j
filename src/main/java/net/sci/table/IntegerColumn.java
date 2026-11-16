@@ -14,7 +14,7 @@ import net.sci.table.impl.DefaultIntegerColumn;
 public interface IntegerColumn extends NumericColumn, Iterable<Integer>
 {
     /**
-     * Creates a new column of integer values from a name and a list of (itneger) values.
+     * Creates a new column of integer values from a name and a list of (integer) values.
      * 
      * Example:
      * {@snippet lang = "java" :
@@ -44,6 +44,11 @@ public interface IntegerColumn extends NumericColumn, Iterable<Integer>
      */
     public int getInt(int row);
     
+    /**
+     * Returns the integer values within this column as a new array of int.
+     * 
+     * @return a new array containing int values within this column
+     */
     public default int[] getIntValues()
     {
         int[] values = new int[this.length()];

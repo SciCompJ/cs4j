@@ -15,6 +15,17 @@ import net.sci.table.Table;
  */
 public class Aggregate
 {
+    /**
+     * Aggregates values of a numeric table based on the levels of a column
+     * (with same number of rows).
+     * 
+     * @param table
+     *            the table containing the columns to aggregate
+     * @param groups
+     *            the aggregation column
+     * @return a new table with as many rows as the number of levels in the
+     *         aggregating column, and as many columns as the input table.
+     */
     public static final Table aggregate(Table table, CategoricalColumn groups)
     {
         Column[] columns = new Column[table.columnCount()];
@@ -41,6 +52,18 @@ public class Aggregate
         return res;
     }
 
+    /**
+     * Aggregates values within a numeric column based on the levels of a column
+     * (with same number of rows). Returns a new numeric column with as many
+     * rows as the number of levels within the aggregation column.
+     * 
+     * @param column
+     *            the column containing values to aggregate
+     * @param groups
+     *            the column containing aggregation info
+     * @return a new numeric column with as many rows as the number of levels
+     *         within the aggregation column.
+     */
     public static final NumericColumn aggregate(NumericColumn column, CategoricalColumn groups)
     {
         if (column.length() != groups.length())
@@ -75,5 +98,9 @@ public class Aggregate
         
         // create result column
         return NumericColumn.create(column.getName(), means);
+    }
+    
+    private Aggregate()
+    {
     }
 }

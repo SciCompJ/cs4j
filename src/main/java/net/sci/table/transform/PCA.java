@@ -101,6 +101,14 @@ public class PCA
         this.scaled = scale;
     }
 
+    /**
+     * Computes the transformation matrix of this PCA from the values within the
+     * specified table.
+     * 
+     * @param table
+     *            the table used to compute transform.
+     * @return a new PCA instance that can be used to transform tables
+     */
     public PCA fit(Table table)
     {
         // get table size

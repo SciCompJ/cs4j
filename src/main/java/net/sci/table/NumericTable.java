@@ -17,7 +17,7 @@ import net.sci.table.impl.DefaultNumericTable;
 import net.sci.table.impl.RowNumberTable;
 
 /**
- * A specialization of <code>Table</code> that contains only numeric columns.
+ * A specialization of {@code Table} that contains only numeric columns.
  * 
  * As instances of this class contain only numerical values, it is possible to
  * use them for classical machine learning or dimensionality reduction

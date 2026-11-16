@@ -12,13 +12,15 @@ import net.sci.table.TableOperator;
  * Compute the covariance matrix of a numeric table, and returns the result in a
  * new symmetric numeric table.
  * 
+ * @see CorrelationMatrix
+ * 
  * @author dlegland
  *
  */
 public class CovarianceMatrix implements TableOperator
 {
     /**
-     * 
+     * Default empty constructor.
      */
     public CovarianceMatrix()
     {
@@ -35,6 +37,14 @@ public class CovarianceMatrix implements TableOperator
         throw new IllegalArgumentException("Requires a numeric table as input");
     }
 
+    /**
+     * Compute the covariance matrix of the specified numeric table, and returns
+     * the result in a new symmetric numeric table.
+     * 
+     * @param table
+     *            the table to process
+     * @return the covariance matrix of the input table
+     */
     public NumericTable processNumeric(NumericTable table)
     {
         int nc = table.columnCount();

@@ -13,8 +13,9 @@ import java.util.Locale;
 import net.sci.table.Table;
 
 /**
+ * Writes a data table into a text file using user-specified delimiters.
+ * 
  * @author dlegland
- *
  */
 public class DelimitedTableWriter implements TableWriter
 {
@@ -59,7 +60,10 @@ public class DelimitedTableWriter implements TableWriter
     // Getters and setters
 
 	/**
-     * @return the delimiter
+     * Returns the delimiter (or the set of delimiters) used to identify tokens
+     * within tables
+     * 
+     * @return the set of delimiters used to identify tokens within tables
      */
     public String getDelimiter()
     {
@@ -67,6 +71,9 @@ public class DelimitedTableWriter implements TableWriter
     }
 
     /**
+     * Sets the delimiter (or the set of delimiters) used to identify tokens
+     * within tables
+     * 
      * @param delimiter the delimiter to set
      */
     public void setDelimiter(String delimiter)
@@ -75,6 +82,8 @@ public class DelimitedTableWriter implements TableWriter
     }
 
     /**
+     * Returns the string format for writing floating point values.
+     * 
      * @return the floatPattern
      */
     public String getFloatPattern()
@@ -83,6 +92,8 @@ public class DelimitedTableWriter implements TableWriter
     }
 
     /**
+     * Sets the string format for writing floating point values.
+     * 
      * @param floatPattern the floatPattern to set
      */
     public void setFloatPattern(String floatPattern)

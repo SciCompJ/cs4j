@@ -8,8 +8,10 @@ import net.sci.table.Table;
 import net.sci.table.TableOperator;
 
 /**
- * Compute the correlation matrix of a numeric table, and returns the result in a
- * new symmetric numeric table.
+ * Compute the correlation matrix of a numeric table, and returns the result in
+ * a new symmetric numeric table.
+ * 
+ * @see CovarianceMatrix
  * 
  * @author dlegland
  *
@@ -17,7 +19,7 @@ import net.sci.table.TableOperator;
 public class CorrelationMatrix implements TableOperator
 {
     /**
-     * 
+     * Default empty constructor.
      */
     public CorrelationMatrix()
     {
@@ -34,6 +36,14 @@ public class CorrelationMatrix implements TableOperator
         throw new IllegalArgumentException("Requires a numeric table as input");
     }
 
+    /**
+     * Compute the correlation matrix of the specified numeric table, and returns
+     * the result in a new symmetric numeric table.
+     * 
+     * @param table
+     *            the table to process
+     * @return the correlation matrix of the input table
+     */
     public NumericTable processNumeric(NumericTable table)
     {
         NumericTable covMat = new CovarianceMatrix().process(table);

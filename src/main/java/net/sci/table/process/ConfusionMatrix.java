@@ -10,11 +10,31 @@ import net.sci.table.IntegerColumn;
 import net.sci.table.Table;
 
 /**
- * 
+ * A confusion matrix allows visualization of the performance of an algorithm,
+ * usually a classification algorithm. Each row of the matrix represents the
+ * instances in an actual class while each column represents the instances in a
+ * predicted class.
  */
 public class ConfusionMatrix
 {
-
+    /**
+     * Default empty constructor.
+     */
+    public ConfusionMatrix()
+    {
+    }
+    
+    /**
+     * Computes the confusion matrix from the levels in two categorical columns
+     * with the same number of rows.
+     * 
+     * @param col1
+     *            the first column (usually corresponding to the actual values)
+     * @param col2
+     *            the second column (usually corresponding to the predicted
+     *            values)
+     * @return the confusion matrix obtained from the two columns.
+     */
     public Table process(Column col1, Column col2)
     {
         if (col1.length() != col2.length())

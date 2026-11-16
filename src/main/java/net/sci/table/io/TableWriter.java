@@ -16,5 +16,15 @@ import net.sci.table.Table;
  */
 public interface TableWriter
 {
+    /**
+     * Writes a data table into a text file.
+     * 
+     * @param table
+     *            the table to write
+     * @param file
+     *            the file to write in
+     * @throws IOException
+     *             if a problem occurred
+     */
 	public void writeTable(Table table, File file) throws IOException;
 }

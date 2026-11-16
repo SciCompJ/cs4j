@@ -135,17 +135,17 @@ public interface NumericColumn extends Column
 
     /**
      * Returns the name of the unit associated to this numeric column, or null
-     * if no unit is associated to the column/
+     * if no unit is associated to the column.
      * 
      * @return the name of the unit associated to the column.
      */
     public String getUnitName();
     
     /**
-     * Returns the name of the unit associated to this numeric column, or null
-     * if no unit is associated to the column/
+     * Sets the name of the unit associated to this numeric column.
      * 
-     * @return the name of the unit associated to the column.
+     * @param unitName
+     *            the name of the unit associated to the column.
      */
     public void setUnitName(String unitName);
     

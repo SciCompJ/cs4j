@@ -13,6 +13,24 @@ import net.sci.table.Table;
  */
 public class DisjunctiveTable
 {
+    /**
+     * Default empty constructor.
+     */
+    public DisjunctiveTable()
+    {
+    }
+    
+    /**
+     * Computes the complete disjunctive table from the levels of the levels
+     * within the column identified by its name.
+     * 
+     * @param table
+     *            the table containing the column.
+     * @param colName
+     *            the name of the column
+     * @return the complete disjunctive table from the levels of the specified
+     *         column
+     */
     public static final Table process(Table table, String colName)
     {
         int colIndex = table.findColumnIndex(colName);
@@ -26,6 +44,15 @@ public class DisjunctiveTable
         return Table.create(table.getRowAxis(), columns);
     }
     
+    /**
+     * Computes the complete disjunctive table from the levels of the specified
+     * categorical column.
+     * 
+     * @param column
+     *            the column to process
+     * @return an array of Logical columns, with as many elements as the number
+     *         of levels.
+     */
     public static final LogicalColumn[] process(CategoricalColumn column)
     {
         String[] levelNames = column.levelNames();

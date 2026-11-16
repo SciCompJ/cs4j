@@ -85,6 +85,12 @@ public class DelimitedNumericTableReader extends AlgoStub implements TableReader
     // =============================================================
     // Accessors and mutators
 
+    /**
+     * Returns the delimiter (or the set of delimiters) used to identify tokens
+     * within tables
+     * 
+     * @return the set of delimiters used to identify tokens within tables
+     */
     public String getDelimiters()
     {
         return delimiters;
@@ -96,6 +102,7 @@ public class DelimitedNumericTableReader extends AlgoStub implements TableReader
      * @param delimiters
      *            the String containing the delimiter. May contain several
      *            delimiter characters.
+     * @return the instance of {@code TableReader}, to enable fluent interface.
      */
     public DelimitedNumericTableReader setDelimiters(String delimiters)
     {
@@ -103,6 +110,11 @@ public class DelimitedNumericTableReader extends AlgoStub implements TableReader
         return this;
     }
 
+    /**
+     * Checks if this reader allows for reading header.
+     * 
+     * @return true if read header option is enabled.
+     */
     public boolean isReadHeader()
     {
         return readHeader;
@@ -113,6 +125,7 @@ public class DelimitedNumericTableReader extends AlgoStub implements TableReader
      * 
      * @param readHeader
      *            the boolean flag for reading the header
+     * @return the instance of {@code TableReader}, to enable fluent interface.
      */
     public DelimitedNumericTableReader setReadHeader(boolean readHeader)
     {
@@ -120,6 +133,11 @@ public class DelimitedNumericTableReader extends AlgoStub implements TableReader
         return this;
     }
 
+    /**
+     * Checks if this reader skip lines.
+     * 
+     * @return true if skip lines option is enabled.
+     */
     public int getSkipLines()
     {
         return skipLines;
@@ -131,6 +149,7 @@ public class DelimitedNumericTableReader extends AlgoStub implements TableReader
      * 
      * @param skipLines
      *            the number of lines to skip
+     * @return the instance of {@code TableReader}, to enable fluent interface.
      */
     public DelimitedNumericTableReader setSkipLines(int skipLines)
     {
@@ -138,6 +157,11 @@ public class DelimitedNumericTableReader extends AlgoStub implements TableReader
         return this;
     }
 
+    /**
+     * Checks if this reader allows for reading row names.
+     * 
+     * @return true if row names option is enabled.
+     */
     public boolean isReadRowNames()
     {
         return readRowNames;
@@ -149,6 +173,7 @@ public class DelimitedNumericTableReader extends AlgoStub implements TableReader
      * 
      * @param readRowNames
      *            the boolean flag for reading row names
+     * @return the instance of {@code TableReader}, to enable fluent interface.
      */
     public DelimitedNumericTableReader setReadRowNames(boolean readRowNames)
     {
