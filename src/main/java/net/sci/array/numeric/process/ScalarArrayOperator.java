@@ -5,11 +5,14 @@ package net.sci.array.numeric.process;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
+import net.sci.array.numeric.Scalar;
 import net.sci.array.numeric.ScalarArray;
 
 /**
- * Interface for Array operators that operate on a ScalarArray instance and
- * returns a ScalarArray instance.
+ * Interface for {@code ArrayOperator} that operate on an {@code Array}
+ * containing {@code Scalar} elements.
+ * 
+ * @see net.sci.array.numeric.Scalar
  * 
  * @author dlegland
  */
@@ -19,7 +22,8 @@ public interface ScalarArrayOperator extends ArrayOperator
     // New methods
     
     /**
-     * Process the input scalar array and return the result in a new ScalarArray.
+     * Processes the input scalar array and returns the result in a new
+     * ScalarArray.
      * 
      * @param array
      *            the input array
@@ -34,7 +38,7 @@ public interface ScalarArrayOperator extends ArrayOperator
     /**
      * Process the input scalar array and return the result in a new array.
      * 
-     * The input array must be an instance of ScalarArray.
+     * The input array must contain {@code Scalar} elements.
      * 
      * @param array
      *            the input array
@@ -45,22 +49,24 @@ public interface ScalarArrayOperator extends ArrayOperator
     @Override
     public default <T> Array<?> process(Array<T> array)
     {
-        if (!(array instanceof ScalarArray))
+        if (array.elementInstanceOf(Scalar.class))
         {
-            throw new IllegalArgumentException("Requires a scalar array as input");
+            @SuppressWarnings({ "unchecked", "rawtypes" })
+            ScalarArray<?> scalarArray = ScalarArray.wrap((Array<? extends Scalar>) array);
+            return processScalar(scalarArray);
         }
         
-        return processScalar((ScalarArray<?>) array);
+        throw new IllegalArgumentException("Requires an array of Scalar elements as input");
     }
 
 	/**
-	 * Override default behavior to check if input array is scalar.
+	 * Override default behavior to check if input array contains scalar elements.
 	 * 
 	 * @return true if input array is scalar
 	 */
 	@Override
 	public default boolean canProcess(Array<?> array)
 	{
-		return array instanceof ScalarArray;
+		return array.elementInstanceOf(Scalar.class);
 	}
 }
