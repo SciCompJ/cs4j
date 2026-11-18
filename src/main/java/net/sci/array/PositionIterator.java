@@ -13,6 +13,18 @@ import net.sci.array.impl.DefaultPositionIterator;
 public interface PositionIterator extends java.util.Iterator<int[]>
 {
     /**
+     * Creates a default position iterator for an array with the specified size.
+     * 
+     * @param dims
+     *            the array of size along each dimension
+     * @return an iterator over the positions within the specified size array
+     */
+    public static PositionIterator of(int[] dims)
+    {
+        return new DefaultPositionIterator(dims);
+    }
+    
+    /**
      * Creates a default position iterator for the specified array.
      * 
      * @param array
