@@ -15,7 +15,7 @@ public interface AlgoListener
     /**
      * Callback for a change in the progression of an algorithm.
      * 
-     * The progression can be obtained by the <code>evt.getProgressRatio()</code>
+     * The progression can be obtained by the {@code evt.getProgressRatio()}
      * method.
      * 
      * @param evt
@@ -26,7 +26,7 @@ public interface AlgoListener
     /**
      * Callback for a change in the status of an algorithm.
      * 
-     * The new status can be obtained by the <code>evt.getStatus()</code>
+     * The new status can be obtained by the {@code evt.getStatus()}
      * method.
      * 
      * @param evt

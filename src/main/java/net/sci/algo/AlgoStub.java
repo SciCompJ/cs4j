@@ -17,7 +17,18 @@ public class AlgoStub implements Algo
 	
 	private ArrayList<AlgoListener> algoListeners = new ArrayList<AlgoListener>();
 
-
+	
+    // ===================================================================
+    // Constructor
+    
+	/**
+	 * Default empty construtor.
+	 */
+	public AlgoStub()
+	{
+	}
+	
+	
 	// ===================================================================
 	// Management of listeners
 	
