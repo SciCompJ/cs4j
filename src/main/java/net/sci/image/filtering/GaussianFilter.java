@@ -150,20 +150,24 @@ public class GaussianFilter extends AlgoStub implements ImageArrayOperator, Scal
         int[] radiusList = computeKernelRadiusList(sigmas);
         
         // performs filtering along first dimension
+        this.fireStatusChanged(this, String.format("Process axis %d over %d", 1, 2));
         double[] kernelX = createKernel(radiusList[0], sigmas[0]);
         double[] resRowX = new double[sizeX];
         for (int y = 0; y < sizeY; y++)
         {
+            this.fireProgressChanged(this, y, sizeY);
             double[] row = getPaddedRow(array, new int[] { 0, y }, 0, radiusList[0]);
             filterRow(row, kernelX, resRowX);
             setRow(res, new int[] { 0, y }, 0, resRowX);
         }
 
         // performs filtering along second dimension
+        this.fireStatusChanged(this, String.format("Process axis %d over %d", 2, 2));
         double[] kernelY = createKernel(radiusList[1], sigmas[1]);
         double[] resRowY = new double[sizeY];
         for (int x = 0; x < sizeX; x++)
         {
+            this.fireProgressChanged(this, x, sizeX);
             double[] row = getPaddedRow(res, new int[] { x, 0 }, 1, radiusList[1]);
             filterRow(row, kernelY, resRowY);
             setRow(res, new int[] {x,0}, 1, resRowY);
@@ -184,10 +188,12 @@ public class GaussianFilter extends AlgoStub implements ImageArrayOperator, Scal
         int[] radiusList = computeKernelRadiusList(sigmas);
         
         // performs filtering along first dimension
+        this.fireStatusChanged(this, String.format("Process axis %d over %d", 1, 3));
         double[] kernelX = createKernel(radiusList[0], sigmas[0]);
         double[] resRowX = new double[sizeX];
         for (int z = 0; z < sizeZ; z++)
         {
+            this.fireProgressChanged(this, z, sizeZ);
             for (int y = 0; y < sizeY; y++)
             {
                 double[] row = getPaddedRow(array, new int[] { 0, y, z }, 0, radiusList[0]);
@@ -197,10 +203,12 @@ public class GaussianFilter extends AlgoStub implements ImageArrayOperator, Scal
         }
         
         // performs filtering along second dimension
+        this.fireStatusChanged(this, String.format("Process axis %d over %d", 2, 3));
         double[] kernelY = createKernel(radiusList[1], sigmas[1]);
         double[] resRowY = new double[sizeY];
         for (int z = 0; z < sizeZ; z++)
         {
+            this.fireProgressChanged(this, z, sizeZ);
             for (int x = 0; x < sizeX; x++)
             {
                 double[] row = getPaddedRow(res, new int[] { x, 0, z }, 1, radiusList[1]);
@@ -210,10 +218,12 @@ public class GaussianFilter extends AlgoStub implements ImageArrayOperator, Scal
         }
         
         // performs filtering along third dimension
+        this.fireStatusChanged(this, String.format("Process axis %d over %d", 3, 3));
         double[] kernelZ = createKernel(radiusList[2], sigmas[2]);
         double[] resRowZ = new double[sizeZ];
         for (int y = 0; y < sizeY; y++)
         {
+            this.fireProgressChanged(this, y, sizeY);
             for (int x = 0; x < sizeX; x++)
             {
                 double[] row = getPaddedRow(res, new int[] { x, y, 0 }, 2, radiusList[2]);
