@@ -204,7 +204,7 @@ public abstract class VectorArray3D<V extends Vector<V, S>, S extends Scalar<S>>
     @Override
     public void setValue(int[] pos, int channel, double value)
     {
-        setValue(pos[0], pos[1], pos[2], channel, channel);
+        setValue(pos[0], pos[1], pos[2], channel, value);
     }
     
     
