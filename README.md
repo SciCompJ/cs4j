@@ -1,11 +1,11 @@
-# cs4j
-C4J is a computer sciences library for java, whose initial design goal is image processing and analysis.
+# CS4J library
+CS4J is a computer sciences library for java, whose initial design goal is image processing and analysis.
 The library provides several features:
-* management of multi-dimensional arrays, whose elements can be of any type
+* management of multi-dimensional arrays, containing elements with arbitrary data type
 * algorithms for array processing: crop, slice, conversion...
-* management of numerical arrays
-* algorithms for image processing and analysis
-* management of data tables
+* management and processing of numerical arrays (smoothing, derivatives...)
+* algorithms for image processing and analysis (segmentation, morphological filtering, region analysis...)
+* management of data tables with plotting facilities
 * a basic geometry kernel for 2D/3D geometric computing
 
 The library is composed of several modules with clear perimeters.
