@@ -3,7 +3,7 @@
  */
 package net.sci.array;
 
-import net.sci.array.impl.GenericArray;
+import java.util.function.Function;
 
 /**
  * A collection of utility methods for arrays.
@@ -13,21 +13,30 @@ import net.sci.array.impl.GenericArray;
 public class ArrayUtils
 {
     /**
-     * Static factory for creating generic arrays.
+     * Converts each element of the input array using the specified type
+     * conversion function, and pack the results into an array the same size as
+     * the input array.
      * 
+     * @param <S>
+     *            the type of the source array
      * @param <T>
-     *            the type of the array.
-     * @param sizes
-     *            the dimensions of the array
-     * @param initValue
-     *            the initialization value used to fill the array
-     * @return a new array with specified dimensions
+     *            the type of the target array
+     * @param array
+     *            the array containing elements to convert
+     * @param fun
+     *            the conversion function
+     * @return an array the same size as the input array containing the
+     *         converted elements
      */
-    public static final <T> Array<T> create(int[] sizes, T initValue)
+    public static final <S, T> Array<? extends T> convert(Array<S> array, Function<S,T> fun)
     {
-        return GenericArray.create(sizes, initValue);
+        T sample = fun.apply(array.sampleElement());
+        Array<T> res = Array.create(array.size(), sample);
+        res.fill((Function<int[], T>) (pos -> fun.apply(array.get(pos))));
+        return res;
     }
-
+    
+    
     /**
      * Checks if two arrays have the same size along each dimension.
      * 
@@ -42,7 +51,7 @@ public class ArrayUtils
      * @see Array#size()
      * @see Array#size(int)
      */
-    public static boolean isSameSize(Array<?> array1, Array<?> array2)
+    public static final boolean isSameSize(Array<?> array1, Array<?> array2)
     {
         // first check dimensionality
         int nd1 = array1.dimensionality();
@@ -71,7 +80,7 @@ public class ArrayUtils
      * 
      * @see Array#dimensionality()
      */
-    public static boolean isSameDimensionality(Array<?> array1, Array<?> array2)
+    public static final boolean isSameDimensionality(Array<?> array1, Array<?> array2)
     {
         return array1.dimensionality() == array2.dimensionality();
     }
@@ -91,7 +100,7 @@ public class ArrayUtils
      *            the position of the first element to copy in the target array.
      *            Must have a length equal to dimensionality of input arrays.
      */
-    public static <T> void copy(Array<? extends T> source, Array<? super T> target, int[] offset)
+    public static final <T> void copy(Array<? extends T> source, Array<? super T> target, int[] offset)
     {
         // dimensionality of source array
         int nd = source.dimensionality();

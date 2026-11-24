@@ -8,7 +8,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import net.sci.array.Array;
-import net.sci.array.ArrayUtils;
 import net.sci.array.numeric.UInt16Array;
 import net.sci.array.numeric.UInt8;
 import net.sci.array.numeric.UInt8Array2D;
@@ -197,7 +196,7 @@ public class FlipTest
     {
         int sizeX = 6;
         int sizeY = 4;
-        Array<String> array = ArrayUtils.create(new int[]{sizeX, sizeY}, "");
+        Array<String> array = Array.create(new int[]{sizeX, sizeY}, "");
         String[] digits = new String[]{"A", "B", "C", "D", "E", "F"};
         for (int y = 0; y < sizeY; y++)
         {
