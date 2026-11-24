@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.binary.Binary;
 import net.sci.array.color.RGB16;
 import net.sci.array.color.RGB8;
@@ -230,7 +230,7 @@ public class Image
         this.name = parent.name;
         
         // duplicate the spatial calibration if appropriate
-        if (Arrays.isSameSize(this.data, parent.data))
+        if (ArrayUtils.isSameSize(this.data, parent.data))
         {
             this.calibration.axes = parent.calibration.duplicateAxes();
         }

@@ -3,7 +3,7 @@ package net.sci.image.morphology.watershed;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.numeric.IntArray;
 import net.sci.array.numeric.IntArray2D;
 import net.sci.array.numeric.ScalarArray2D;
@@ -56,7 +56,7 @@ public class MarkerBasedWatershed2D
         int sizeX = array.size(0);
         int sizeY = array.size(1);
         
-        if (!Arrays.isSameSize(array, markers))
+        if (!ArrayUtils.isSameSize(array, markers))
         {
             throw new IllegalArgumentException("Marker and input arrays must have the same size");
         }

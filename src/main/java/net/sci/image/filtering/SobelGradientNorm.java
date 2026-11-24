@@ -42,7 +42,7 @@ public class SobelGradientNorm extends AlgoStub implements ImageArrayOperator
             throw new IllegalArgumentException("Both arrays must have the same dimensionality");
         }
         
-        if (!net.sci.array.Arrays.isSameSize(source, target))
+        if (!net.sci.array.ArrayUtils.isSameSize(source, target))
         {
             throw new IllegalArgumentException("Both arrays must have the same size");
         }

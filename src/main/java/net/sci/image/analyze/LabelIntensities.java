@@ -5,7 +5,7 @@ package net.sci.image.analyze;
 
 import java.util.HashMap;
 
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.numeric.IntArray;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.image.label.LabelImages;
@@ -41,7 +41,7 @@ public class LabelIntensities
 	public static final double[] mean(ScalarArray<?> array, IntArray<?> labelArray, int[] labels)
 	{
 		// check input consistency
-		if (!Arrays.isSameSize(array, labelArray))
+		if (!ArrayUtils.isSameSize(array, labelArray))
 		{
 			throw new IllegalArgumentException("Both arrays should have same size");
 		}
@@ -92,7 +92,7 @@ public class LabelIntensities
 	public static final double[] sum(ScalarArray<?> array, IntArray<?> labelArray, int[] labels)
 	{
 		// check input consistency
-		if (!Arrays.isSameSize(array, labelArray))
+		if (!ArrayUtils.isSameSize(array, labelArray))
 		{
 			throw new IllegalArgumentException("Both arrays should have same size");
 		}

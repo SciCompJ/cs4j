@@ -3,7 +3,7 @@
  */
 package net.sci.image.morphology;
 
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
@@ -245,7 +245,7 @@ public class BinaryMorphology
         {
             throw new RuntimeException("Input arrays must have same dimensionality");
         }
-        if (!Arrays.isSameSize(marker, mask))
+        if (!ArrayUtils.isSameSize(marker, mask))
         {
             throw new RuntimeException("Input arrays must have same size");
         }

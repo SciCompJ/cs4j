@@ -2,7 +2,7 @@ package net.sci.image.label;
 
 import java.util.Map;
 
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.numeric.IntArray;
 import net.sci.array.numeric.IntArray2D;
 import net.sci.array.numeric.IntArray3D;
@@ -36,12 +36,12 @@ public class LabelValues
             ScalarArray<?> valueImage)
     {
         // check image dimensionality
-        if (!Arrays.isSameDimensionality(valueImage, labelImage))
+        if (!ArrayUtils.isSameDimensionality(valueImage, labelImage))
         {
             throw new IllegalArgumentException("Both images must have same dimensionality");
         }
         // check image dimensions
-        if (!Arrays.isSameSize(valueImage, labelImage))
+        if (!ArrayUtils.isSameSize(valueImage, labelImage))
         {
             throw new IllegalArgumentException("Both images must have same dimensions");
         }

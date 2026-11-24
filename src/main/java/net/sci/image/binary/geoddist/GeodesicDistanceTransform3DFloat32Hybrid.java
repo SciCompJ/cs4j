@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Deque;
 
 import net.sci.algo.AlgoStub;
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.numeric.Float32Array3D;
 import net.sci.image.binary.distmap.ChamferMask3D;
@@ -84,7 +84,7 @@ public class GeodesicDistanceTransform3DFloat32Hybrid extends AlgoStub implement
      */
     public Float32Array3D process3d(BinaryArray3D marker, BinaryArray3D maskImage)
     {
-        if (!Arrays.isSameSize(marker, maskImage))
+        if (!ArrayUtils.isSameSize(marker, maskImage))
         {
             throw new IllegalArgumentException("Marker and mask arrays must have same dimensions.");
         }

@@ -6,7 +6,7 @@ package net.sci.array.numeric.process;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.numeric.Float32VectorArray;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.VectorArray;
@@ -89,7 +89,7 @@ public class Gradient extends AlgoStub implements ArrayOperator
         {
             throw new IllegalArgumentException("Target array must have at least " + source.dimensionality() + " channels");
         }
-        if (!Arrays.isSameSize(source, target))
+        if (!ArrayUtils.isSameSize(source, target))
         {
             throw new IllegalArgumentException("Source and Target arrays must have same dimensions");
         }

@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.List;
 
 import net.sci.array.Array;
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.numeric.UInt8;
@@ -95,7 +95,7 @@ public class BinaryOverlayRGB8Array implements RGB8Array, Array.View<RGB8>
     public BinaryOverlayRGB8Array(Array<?> baseArray, BinaryArray binaryMask, RGB8 overlayColor, double opacity)
     {
         // check input validity
-        if (!Arrays.isSameSize(baseArray, binaryMask))
+        if (!ArrayUtils.isSameSize(baseArray, binaryMask))
         {
             throw new IllegalArgumentException("Input arrays must have same size"); 
         }

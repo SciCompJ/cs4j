@@ -27,7 +27,7 @@ import net.sci.util.MathUtils;
  * sample element within the array. The sample element is mostly used to
  * identify the best implementation.
  *
- * @see Arrays
+ * @see ArrayUtils
  *
  * @param <T>
  *            the type of elements stored within the array.

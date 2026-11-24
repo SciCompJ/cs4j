@@ -5,7 +5,7 @@ package net.sci.array.numeric.process;
 
 import java.util.function.BiFunction;
 
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.numeric.Scalar;
 import net.sci.array.numeric.ScalarArray;
 
@@ -462,11 +462,11 @@ public class ArrayMath
             ScalarArray<? extends Scalar<?>> array2,
             ScalarArray<? extends Scalar<?>> output)
     {
-        if (!Arrays.isSameDimensionality(array1, array2) || !Arrays.isSameDimensionality(array1, output))
+        if (!ArrayUtils.isSameDimensionality(array1, array2) || !ArrayUtils.isSameDimensionality(array1, output))
         {
             throw new IllegalArgumentException("Arrays must have same dimension");
         }
-        if (!Arrays.isSameSize(array1, array2) || !Arrays.isSameSize(array1, output))
+        if (!ArrayUtils.isSameSize(array1, array2) || !ArrayUtils.isSameSize(array1, output))
         {
             throw new IllegalArgumentException("Arrays must have same size");
         }

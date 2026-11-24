@@ -6,7 +6,7 @@ package net.sci.array.numeric.process;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.numeric.ScalarArray;
 
 /**
@@ -160,7 +160,7 @@ public class Smoothing1D extends AlgoStub implements ArrayOperator
         {
             throw new IllegalArgumentException("Target array must have dimensionality at least equal to " + (dim+1));
         }
-        if (!Arrays.isSameSize(source, target))
+        if (!ArrayUtils.isSameSize(source, target))
         {
             throw new IllegalArgumentException("Source and Target arrays must have same dimensions");
         }

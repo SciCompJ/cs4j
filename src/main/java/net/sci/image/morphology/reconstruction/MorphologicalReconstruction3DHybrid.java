@@ -6,7 +6,7 @@ package net.sci.image.morphology.reconstruction;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import net.sci.algo.AlgoStub;
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.numeric.ScalarArray3D;
 import net.sci.image.connectivity.Connectivity3D;
 import net.sci.image.morphology.MorphologicalReconstruction;
@@ -159,7 +159,7 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub implements Mor
     public ScalarArray3D<?> process(ScalarArray3D<?> marker, ScalarArray3D<?> mask)
     {
         // Check dimensions consistency
-        if (!Arrays.isSameSize(marker, mask))
+        if (!ArrayUtils.isSameSize(marker, mask))
         {
             throw new IllegalArgumentException("Marker and Mask images must have the same size");
         }
@@ -227,7 +227,7 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub implements Mor
     public void processInPlace(ScalarArray3D<?> result, ScalarArray3D<?> mask)
     {
         // Check dimensions consistency
-        if (!Arrays.isSameSize(result, mask))
+        if (!ArrayUtils.isSameSize(result, mask))
         {
             throw new IllegalArgumentException("Result and Mask images must have the same size");
         }

@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import net.sci.array.Array;
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.UInt8Array;
 import net.sci.array.numeric.impl.ScalarArrayUInt8View;
@@ -97,13 +97,13 @@ import net.sci.array.numeric.impl.ScalarArrayUInt8View;
       */
      public ScalarArraysDifferenceView(ScalarArray<?> array1, double vmin1, double vmax1, ScalarArray<?> array2, double vmin2, double vmax2)
      {
-         if (!Arrays.isSameDimensionality(array1, array2))
+         if (!ArrayUtils.isSameDimensionality(array1, array2))
          {
              int d1 = array1.dimensionality();
              int d2 = array2.dimensionality();
              throw new IllegalArgumentException(String.format("Both arrays must have same dimensionality (here, %d and %d)", d1, d2));
          }
-         if (!Arrays.isSameSize(array1, array2))
+         if (!ArrayUtils.isSameSize(array1, array2))
          {
              throw new IllegalArgumentException("Both arrays must have same size");
          }

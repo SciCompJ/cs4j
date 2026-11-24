@@ -4,7 +4,7 @@
 package net.sci.array.shape;
 
 import net.sci.array.Array;
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 
 /**
  * Concatenates two arrays of same type.
@@ -59,9 +59,9 @@ public class Concatenate
         Array<T> result = array1.newInstance(newDims);
 
         int[] offset = new int[nd];
-        Arrays.copy(array1, result, offset);
+        ArrayUtils.copy(array1, result, offset);
         offset[this.dim] = array1.dimensionality() > this.dim ? array1.size(this.dim) : 1;
-        Arrays.copy(array2, result, offset);
+        ArrayUtils.copy(array2, result, offset);
                 
         return result;
     }

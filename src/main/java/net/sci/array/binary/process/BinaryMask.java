@@ -5,7 +5,7 @@ package net.sci.array.binary.process;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.impl.ArrayWrapperStub;
 
@@ -76,7 +76,7 @@ public class BinaryMask extends AlgoStub
     public <T> Array<T> process(Array<T> array, BinaryArray mask)
     {
         // check input validity
-        if (!Arrays.isSameSize(array, mask))
+        if (!ArrayUtils.isSameSize(array, mask))
         {
             throw new IllegalArgumentException("Both arrays must have same size");
         }
@@ -228,7 +228,7 @@ public class BinaryMask extends AlgoStub
             super(array);
             
             // check same size
-            if (!Arrays.isSameSize(array, mask))
+            if (!ArrayUtils.isSameSize(array, mask))
             {
                 throw new IllegalArgumentException("Both arrays must have same size");
             }

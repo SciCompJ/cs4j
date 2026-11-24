@@ -5,7 +5,7 @@ package net.sci.image.binary.labeling;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.numeric.IntArray;
@@ -169,7 +169,7 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements Component
         {
             throw new IllegalArgumentException("Requires a Label Map of dimensionality 2");
         }
-        if (!Arrays.isSameSize(array, labelMap))
+        if (!ArrayUtils.isSameSize(array, labelMap))
         {
             throw new IllegalArgumentException("Input and Output arrays must have same dimensions");
         }

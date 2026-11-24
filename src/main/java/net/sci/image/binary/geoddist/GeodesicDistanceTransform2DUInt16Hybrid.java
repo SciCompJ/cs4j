@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Deque;
 
 import net.sci.algo.AlgoStub;
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.numeric.UInt16;
 import net.sci.array.numeric.UInt16Array2D;
@@ -131,7 +131,7 @@ public class GeodesicDistanceTransform2DUInt16Hybrid extends AlgoStub implements
      */
     public UInt16Array2D process2d(BinaryArray2D marker, BinaryArray2D maskImage)
     {
-        if (!Arrays.isSameSize(marker, maskImage))
+        if (!ArrayUtils.isSameSize(marker, maskImage))
         {
             throw new IllegalArgumentException("Marker and mask arrays must have same dimensions.");
         }

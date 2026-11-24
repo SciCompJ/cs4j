@@ -7,7 +7,7 @@ import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 import net.sci.array.Array;
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.PositionIterator;
 import net.sci.array.impl.ArrayWrapperStub;
 
@@ -291,7 +291,7 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
      */
     public default ScalarArray<?> apply(UnaryOperator<Double> fun, ScalarArray<?> output)
     {
-        if (!Arrays.isSameSize(this, output))
+        if (!ArrayUtils.isSameSize(this, output))
         {
             throw new IllegalArgumentException("Output array must have same size as input array");
         }

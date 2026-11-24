@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.List;
 
 import net.sci.array.Array;
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.numeric.UInt8Array;
 
 /**
@@ -52,11 +52,11 @@ public class MergeChannelsRGB8Array implements RGB8Array, Array.View<RGB8>
      */
     public MergeChannelsRGB8Array(UInt8Array redChannel, UInt8Array greenChannel, UInt8Array blueChannel)
     {
-        if (!Arrays.isSameDimensionality(redChannel, greenChannel) || !Arrays.isSameDimensionality(redChannel, blueChannel))
+        if (!ArrayUtils.isSameDimensionality(redChannel, greenChannel) || !ArrayUtils.isSameDimensionality(redChannel, blueChannel))
         {
             throw new RuntimeException("Arrays must have same dimensionality");
         }
-        if (!Arrays.isSameSize(redChannel, greenChannel) || !Arrays.isSameSize(redChannel, blueChannel))
+        if (!ArrayUtils.isSameSize(redChannel, greenChannel) || !ArrayUtils.isSameSize(redChannel, blueChannel))
         {
             throw new RuntimeException("Arrays must have same size");
         }

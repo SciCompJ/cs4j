@@ -10,7 +10,7 @@ import net.sci.array.impl.GenericArray;
  * 
  * @author dlegland
  */
-public class Arrays
+public class ArrayUtils
 {
     /**
      * Static factory for creating generic arrays.
@@ -115,7 +115,7 @@ public class Arrays
     /**
      * Private constructor to prevent instantiation.
      */
-    private Arrays()
+    private ArrayUtils()
     {
     } 
 }

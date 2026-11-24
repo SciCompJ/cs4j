@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.function.UnaryOperator;
 
 import net.sci.array.Array;
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.PositionIterator;
 import net.sci.array.impl.ArrayWrapperStub;
 import net.sci.array.impl.GenericArray;
@@ -190,11 +190,11 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
     public default void setChannel(int c, ScalarArray<?> channel)
     {
         // check dims
-        if (!Arrays.isSameDimensionality(this, channel))
+        if (!ArrayUtils.isSameDimensionality(this, channel))
         {
             throw new IllegalArgumentException("Vector array and channel array must have same dimensonality");
         }
-        if (!Arrays.isSameSize(this, channel))
+        if (!ArrayUtils.isSameSize(this, channel))
         {
             throw new IllegalArgumentException("Vector array and channel array must have same size");
         }
@@ -485,7 +485,7 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
      */
     public default VectorArray<V,S> apply(UnaryOperator<Double> fun, VectorArray<V,S> output)
     {
-        if (!Arrays.isSameSize(this, output))
+        if (!ArrayUtils.isSameSize(this, output))
         {
             throw new IllegalArgumentException("Output array must have same size as input array");
         }

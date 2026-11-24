@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import net.sci.array.Array;
 import net.sci.array.Array3D;
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.numeric.UInt8Array;
 import net.sci.array.numeric.UInt8Array3D;
 
@@ -48,7 +48,7 @@ public class PermuteDimensionsTest
         
         // check result
         int[] newDims = new int[] {3, 5, 4};
-        assertTrue(Arrays.isSameDimensionality(array, result));
+        assertTrue(ArrayUtils.isSameDimensionality(array, result));
         for (int d = 0; d < 3; d++)
         {
             assertTrue(result.size(d) == newDims[d]);

@@ -9,7 +9,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import net.sci.array.Array3D;
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.numeric.ScalarArray3D;
 import net.sci.array.numeric.UInt8Array3D;
 import net.sci.array.numeric.impl.BufferedUInt8Array3D;
@@ -303,8 +303,8 @@ public class Rotate3D90Test
     
     private void checkScalarArrayEquals(ScalarArray3D<?> array1, ScalarArray3D<?> array2, double tol)
     {
-        assertTrue(Arrays.isSameDimensionality(array1, array2));
-        assertTrue(Arrays.isSameSize(array1, array2));
+        assertTrue(ArrayUtils.isSameDimensionality(array1, array2));
+        assertTrue(ArrayUtils.isSameSize(array1, array2));
         
         for (int[] pos : array1.positions())
         {

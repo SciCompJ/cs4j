@@ -13,7 +13,7 @@ import java.util.Deque;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.impl.ReverseOrderPositionIterator;
 import net.sci.array.numeric.Int;
 import net.sci.array.numeric.IntArray;
@@ -165,7 +165,7 @@ public class MorphologicalReconstructionHybridScalar extends AlgoStub
     public ScalarArray<?> process(ScalarArray<?> marker, ScalarArray<?> mask)
     {
         // Check sizes are consistent
-        if (!Arrays.isSameSize(marker, mask))
+        if (!ArrayUtils.isSameSize(marker, mask))
         {
             throw new IllegalArgumentException("Marker and Mask images must have the same size");
         }
@@ -266,7 +266,7 @@ public class MorphologicalReconstructionHybridScalar extends AlgoStub
     public void processInPlace(ScalarArray<?> result, ScalarArray<?> mask)
     {
         // Check sizes are consistent
-        if (!Arrays.isSameSize(result, mask))
+        if (!ArrayUtils.isSameSize(result, mask))
         {
             throw new IllegalArgumentException("Result and Mask images must have the same size");
         }

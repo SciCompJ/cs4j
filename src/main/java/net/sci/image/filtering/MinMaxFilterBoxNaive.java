@@ -4,7 +4,7 @@
 package net.sci.image.filtering;
 
 import net.sci.algo.AlgoStub;
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.ScalarArray3D;
@@ -61,7 +61,7 @@ public final class MinMaxFilterBoxNaive extends AlgoStub implements ImageArrayOp
             throw new IllegalArgumentException("Both arrays must have the same dimensionality");
         }
         
-        if (!Arrays.isSameSize(source, target))
+        if (!ArrayUtils.isSameSize(source, target))
         {
             throw new IllegalArgumentException("Both arrays must have the same size");
         }

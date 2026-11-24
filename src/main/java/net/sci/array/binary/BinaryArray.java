@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import net.sci.array.Array;
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.PositionIterator;
 import net.sci.array.binary.process.BinaryMask;
 import net.sci.array.binary.process.ConvertToBinary;
@@ -183,7 +183,7 @@ public interface BinaryArray extends IntArray<Binary>
     public default <T> Iterable<T> selectElements(Array<T> array)
     {
         // check array dimensions
-        if (!Arrays.isSameSize(this, array))
+        if (!ArrayUtils.isSameSize(this, array))
         {
             throw new IllegalArgumentException("Mask array must have same size as input array");
         }
@@ -226,7 +226,7 @@ public interface BinaryArray extends IntArray<Binary>
     public default Iterable<Double> selectValues(ScalarArray<?> array)
     {
         // check array dimensions
-        if (!Arrays.isSameSize(this, array))
+        if (!ArrayUtils.isSameSize(this, array))
         {
             throw new IllegalArgumentException("Mask array must have same size as input array");
         }
@@ -269,7 +269,7 @@ public interface BinaryArray extends IntArray<Binary>
     public default Iterable<Integer> selectInts(IntArray<?> array)
     {
         // check array dimensions
-        if (!Arrays.isSameSize(this, array))
+        if (!ArrayUtils.isSameSize(this, array))
         {
             throw new IllegalArgumentException("Mask array must have same size as input array");
         }

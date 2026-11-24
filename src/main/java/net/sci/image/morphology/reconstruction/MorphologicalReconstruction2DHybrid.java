@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.Deque;
 
 import net.sci.algo.AlgoStub;
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.image.connectivity.Connectivity2D;
 import net.sci.image.morphology.MorphologicalReconstruction;
@@ -155,7 +155,7 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
     public ScalarArray2D<?> process(ScalarArray2D<?> marker, ScalarArray2D<?> mask)
     {
         // Check sizes are consistent
-        if (!Arrays.isSameSize(marker, mask))
+        if (!ArrayUtils.isSameSize(marker, mask))
         {
             throw new IllegalArgumentException("Marker and Mask images must have the same size");
         }
@@ -209,7 +209,7 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
     public void processInPlace(ScalarArray2D<?> result, ScalarArray2D<?> mask)
     {
         // Check sizes are consistent
-        if (!Arrays.isSameSize(result, mask))
+        if (!ArrayUtils.isSameSize(result, mask))
         {
             throw new IllegalArgumentException("Result and Mask images must have the same size");
         }

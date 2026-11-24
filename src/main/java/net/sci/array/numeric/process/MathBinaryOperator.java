@@ -7,7 +7,7 @@ import java.util.function.BiFunction;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.numeric.Scalar;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray2D;
@@ -278,11 +278,11 @@ public class MathBinaryOperator extends AlgoStub
 
     private static final void checkSameSize(Array<?> array1, Array<?> array2)
     {
-        if (!Arrays.isSameDimensionality(array1, array2))
+        if (!ArrayUtils.isSameDimensionality(array1, array2))
         {
             throw new IllegalArgumentException("Arrays must have same dimensionality");
         }
-        if (!Arrays.isSameSize(array1, array2))
+        if (!ArrayUtils.isSameSize(array1, array2))
         {
             throw new IllegalArgumentException("Arrays must have same size");
         }

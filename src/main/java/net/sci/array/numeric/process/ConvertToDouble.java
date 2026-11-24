@@ -6,7 +6,7 @@ package net.sci.array.numeric.process;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
-import net.sci.array.Arrays;
+import net.sci.array.ArrayUtils;
 import net.sci.array.numeric.Float32Array;
 import net.sci.array.numeric.ScalarArray;
 
@@ -56,11 +56,11 @@ public class ConvertToDouble extends AlgoStub implements ArrayOperator
     public ScalarArray<?> convert(ScalarArray<?> source, ScalarArray<?> target)
     {
         // check inputs
-        if (!Arrays.isSameDimensionality(source, target))
+        if (!ArrayUtils.isSameDimensionality(source, target))
         {
             throw new IllegalArgumentException("Both arrays must have same dimensionality");
         }
-        if (!Arrays.isSameSize(source, target))
+        if (!ArrayUtils.isSameSize(source, target))
         {
             throw new IllegalArgumentException("Both arrays must have same dimensions");
         }
