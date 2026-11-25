@@ -71,7 +71,7 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
      * Computes the L2-norm of each element of the given vector array.
      * 
      * Current implementation returns the result in a new instance of
-     * {@code Float32Array}.
+     * {@code Float64Array}.
      * 
      * @param array
      *            a vector array
@@ -90,7 +90,7 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
      * values of elements of each vector.
      * 
      * Current implementation returns the result in a new instance of
-     * {@code Float32Array}.
+     * {@code Float64Array}.
      * 
      * @param array
      *            a vector array
@@ -132,7 +132,7 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
      * Computes the norm of each element of the given vector array.
      * 
      * Current implementation returns the result in a new instance of
-     * {@code Float32Array}.
+     * {@code Float64Array}.
      * 
      * @return a scalar array with the same size at the input array
      */
@@ -220,18 +220,19 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
     
     /**
      * Returns the set of values corresponding to the array element for the
-     * given position.
+     * given position, using a pre-allocated array for storing result.
      * 
      * @param pos
      *            the position as a list of indices in each dimension
      * @param values
-     *            the new set of values corresponding for the given position
+     *            a pre-allocated array for storing result.
      * @return a reference to the array of values at the given position
      */
     public double[] getValues(int[] pos, double[] values);
     
     /**
-     * Sets of values corresponding to the array element for the given position.
+     * Sets the values corresponding to the array element at the given
+     * position.
      * 
      * @param pos
      *            list of indices in each dimension
@@ -272,11 +273,11 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
      * vector element within this array, and returns the array containing
      * minimum values.
      * 
-     * @see #max(double)
-     * 
      * @param v
      *            the value to compare with
      * @return a new array with the result of min.
+     * 
+     * @see #max(double)
      */
     public default VectorArray<V,S> min(double v)
     {
@@ -307,11 +308,11 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
      * vector element within this array, and returns the array containing
      * maximum values.
      * 
-     * @see #min(double)
-     * 
      * @param v
      *            the value to compare with
      * @return a new array with the result of max.
+     * @see #min(double)
+     * 
      */
     public default VectorArray<V,S> max(double v)
     {
@@ -345,11 +346,11 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
      * Adds the specified value to each component of each vector element within
      * this array, and returns the new array.
      * 
-     * @see #minus(double)
-     * 
      * @param v
      *            the value to add
      * @return a new array with the result of addition.
+     * 
+     * @see #minus(double)
      */
     public default VectorArray<V,S> plus(double v)
     {
@@ -374,11 +375,11 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
      * Subtracts the specified value from each component of each vector element
      * within this array, and returns the new array.
      * 
-     * @see #plus(double)
-     * 
      * @param v
      *            the value to subtract
      * @return a new array with the result of subtraction.
+     * 
+     * @see #plus(double)
      */
     public default VectorArray<V,S> minus(double v)
     {
@@ -403,11 +404,11 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
      * Multiplies each component of each vector element within this array with
      * the specified value, and returns the new array.
      * 
-     * @see #dividedBy(double)
-     * 
      * @param v
      *            the value to multiply with
      * @return a new array with the result of multiplication.
+     * 
+     * @see #dividedBy(double)
      */
     public default VectorArray<V,S> times(double v)
     {
@@ -432,11 +433,11 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
      * Divides each component of each vector element within this array by the
      * specified value, and returns the new array.
      * 
-     * @see #times(double)
-     * 
      * @param v
      *            the value to divide by
      * @return a new array with the result of division.
+     * 
+     * @see #times(double)
      */
     public default VectorArray<V,S> dividedBy(double v)
     {
@@ -461,7 +462,8 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
      * Applies the given function to each element of each channel the array, and
      * return a new Array with the same class.
      * 
-     * @param fun the function to apply
+     * @param fun
+     *            the function to apply
      * @return the result array
      */
     public default VectorArray<V,S> apply(UnaryOperator<Double> fun)
@@ -648,12 +650,12 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
          * Returns the values at current position of the iterator into a
          * pre-allocated array.
          * 
-         * Default implementation uses the <code>getValues(double[])</code> of a
-         * new <code>Vector</code> instance. Subclasses may use a more efficient
+         * Default implementation uses the {@code getValues(double[])} of a new
+         * {@code Vector} instance. Subclasses may use a more efficient
          * implementation.
          * 
          * @param values
-         *            a pre-allocated array with <code>getVectorLength()</code>
+         *            a pre-allocated array with {@code getVectorLength()}
          *            elements.
          * @return the reference to the values array.
          */

@@ -6,7 +6,7 @@ package net.sci.array.numeric.process;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
-import net.sci.array.numeric.Float32Array;
+import net.sci.array.numeric.Float64Array;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.Vector;
 import net.sci.array.numeric.VectorArray;
@@ -15,13 +15,19 @@ import net.sci.array.numeric.VectorArray;
  * Computes the classical L2 norm (or Euclidean norm) of each {@code Vector}
  * element of an Array of {@code Vector}, and returns the result as an array of
  * {@code Scalar} the same size as the input array.
+ * 
+ * The default behavior is to store the result into a new instance of
+ * {@code Float64Array}, but the type of output array can be changed with the
+ * {@code setFactory()} method.
+ * 
+ * @see MaxNorm
  */
 public class Norm extends AlgoStub implements ArrayOperator
 {
     /**
      * The factory used to create output array.
      */
-    protected ScalarArray.Factory<?> factory = Float32Array.defaultFactory;
+    protected ScalarArray.Factory<?> factory = Float64Array.defaultFactory;
     
     /**
      * Default empty constructor.
