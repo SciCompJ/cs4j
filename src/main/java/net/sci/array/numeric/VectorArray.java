@@ -12,18 +12,20 @@ import net.sci.array.ArrayUtils;
 import net.sci.array.PositionIterator;
 import net.sci.array.impl.ArrayWrapperStub;
 import net.sci.array.impl.GenericArray;
-import net.sci.array.numeric.process.VectorArrayL2Norm;
-import net.sci.array.numeric.process.VectorArrayMaxNorm;
+import net.sci.array.numeric.process.Norm;
+import net.sci.array.numeric.process.MaxNorm;
 
 /**
  * Array containing vectors of floating-point values, all vectors having the
- * same number of elements.
+ * same number of elements. The definition of type of vector type as well as the
+ * type of vector elements is left to specialization interfaces and
+ * implementations.
  *
  * @param <V>
  *            the type of the vector
  * @param <S>
  *            the type of the elements contained by this vector
- *           
+ * 
  * @author dlegland
  */
 public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extends NumericArray<V>
@@ -37,7 +39,7 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
      * 
      * Example:
      * {@snippet lang="java" :
-     *  if (Vector.class.isAssignableFrom(array.elementClass()))
+     *  if (array.elementInstanceOf(Vector.class))
      *  {
      *      @SuppressWarnings({ "unchecked", "rawtypes" })
      *      VectorArray<?,?> wrapped = VectorArray.wrap((Array<? extends Vector>) array);
@@ -58,9 +60,7 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
     @SuppressWarnings("unchecked")
     public static <V extends Vector<V, S>, S extends Scalar<S>> VectorArray<V,S> wrap(Array<V> array)
     {
-        if (array instanceof VectorArray) return (VectorArray<V,S>) array;
-        
-        return new Wrapper<V,S>(array);
+        return array instanceof VectorArray ? (VectorArray<V, S>) array : new Wrapper<V, S>(array);
     }
     
     
@@ -71,15 +71,17 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
      * Computes the L2-norm of each element of the given vector array.
      * 
      * Current implementation returns the result in a new instance of
-     * Float32Array.
+     * {@code Float32Array}.
      * 
      * @param array
      *            a vector array
      * @return a scalar array with the same size at the input array
+     * 
+     * @see net.sci.array.numeric.process.Norm
      */
     public static ScalarArray<?> norm(VectorArray<?, ?> array)
     {
-        return new VectorArrayL2Norm().processVector(array);
+        return new Norm().processVector(array);
     }
 
     /**
@@ -88,15 +90,17 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
      * values of elements of each vector.
      * 
      * Current implementation returns the result in a new instance of
-     * Float32Array.
+     * {@code Float32Array}.
      * 
      * @param array
      *            a vector array
      * @return a scalar array with the same size at the input array
+     * 
+     * @see net.sci.array.numeric.process.MaxNorm
      */
     public static ScalarArray<?> maxNorm(VectorArray<?, ?> array)
     {
-        return new VectorArrayMaxNorm().processVector(array);
+        return new MaxNorm().processVector(array);
     }
 
     
@@ -119,6 +123,7 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
         }
         return channels;
     }
+    
 
     // =============================================================
     // New methods
@@ -127,20 +132,13 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
      * Computes the norm of each element of the given vector array.
      * 
      * Current implementation returns the result in a new instance of
-     * Float32Array.
+     * {@code Float32Array}.
      * 
      * @return a scalar array with the same size at the input array
      */
     public default ScalarArray<?> norm()
     {
-        // allocate memory for result
-        Float32Array result = Float32Array.create(size());
-        
-        // fill values in result array, using buffer to avoid repetition of array allocation 
-        double[] values = new double[channelCount()];
-        result.fillValues(pos -> Vector.norm(getValues(pos, values)));
-        
-        return result;
+        return norm(this);
     }
 
 
